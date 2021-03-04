@@ -3,27 +3,13 @@ const util = require('util');
 const fs = require('fs');
 
 // Preprocess files into json stemmed files and return term vectors
-async function preprocessFiles(files) {
-    const asyncLoadFile = util.promisify(fs.readFile);
+function preprocessFiles(files) {
     let termVec = [];
-    for (const filename of files) {
-        let content;
-        try {
-            content = await asyncLoadFile( 'data/collection/' + filename, 'utf-8');
-        } catch (e) {
-            console.log(e.message);
-            return;
-        }
-
-        // push to vec and write out to result
-        let stemmed = stem(content);
+    files.forEach((filename) => {
+        let stemmed = stem(fs.readFileSync('data/collection/' + filename, 'utf-8'));
         termVec.push(stemmed);
-        fs.writeFile(`data/stemmed/${filename.replace("txt", "json")}`,
-            JSON.stringify(stemmed),
-            (err) => {
-                if (err) console.log(err.message);
-            });
-    }
+        fs.writeFileSync(`data/stemmed/${filename.replace("txt", "json")}`, JSON.stringify(stemmed));
+    });
     return termVec;
 }
 
@@ -37,33 +23,24 @@ function stem(data) {
 }
 
 // Load vectors from json files, returns term vectors
-async function loadVectors(files) {
-    const asyncLoadFile = util.promisify(fs.readFile);
+function loadVectors(files) {
     let termVec = [];
-    for (const filename of files) {
-        let content;
-        try {
-            content = await asyncLoadFile('data/stemmed/' + filename, 'utf-8');
-        } catch (e) {
-            console.log(e.message);
-            return;
-        }
-        termVec.push(JSON.parse(content));
-    }
+    files.forEach((filename) => {
+        termVec.push(JSON.parse(fs.readFileSync('data/stemmed/' + filename, 'utf-8')));
+    });
     return termVec;
 }
 
 // Load the term vectors depending on whether we have preprocessed json docs or not
-async function load() {
-    const asyncLoadDir = util.promisify(fs.readdir);
-    const stemmed = await asyncLoadDir('data/stemmed');
-    const orig = await asyncLoadDir('data/collection');
+function load() {
+    const stemmed = fs.readdirSync('data/stemmed');
+    const orig = fs.readdirSync('data/collection');
     let termVec;
     if (stemmed.length !== orig.length)
-        termVec = await preprocessFiles(orig);
+        termVec = preprocessFiles(orig);
 
     else
-        termVec = await loadVectors(stemmed);
+        termVec = loadVectors(stemmed);
     return termVec;
 }
 

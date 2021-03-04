@@ -12,8 +12,8 @@ app.get('/', (req, res) => {
     res.send("To be implemented...");
 })
 
-// Stem documents
-console.log(load()); // won't pass need to be placed inside async func with await
+// Stem and load documents
+console.log(load());
 
 // Listen to port
 const port = process.env.PORT || 3000;
