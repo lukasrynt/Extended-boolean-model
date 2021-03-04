@@ -1,6 +1,7 @@
 // Imports
 const express = require('express');
-const load = require('./utils/text_processor');
+const processDocuments = require('./utils/text_processor');
+const remap = require('./utils/term_by_document')
 
 const app = express();
 
@@ -12,8 +13,8 @@ app.get('/', (req, res) => {
     res.send("To be implemented...");
 })
 
-// Stem and load documents
-console.log(load());
+// Process documents into matrix
+remap(processDocuments());
 
 // Listen to port
 const port = process.env.PORT || 3000;

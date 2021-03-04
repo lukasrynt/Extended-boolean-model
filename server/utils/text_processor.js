@@ -4,55 +4,46 @@ const sw = require('stopword')
 
 // Preprocess files into json stemmed files and return term vectors
 function preprocessFiles(files) {
-    let termVec = [];
+    let matrix = [];
     files.forEach((filename) => {
-        let termVec = {content: stemAndLemmatize(fs.readFileSync('data/collection/' + filename, 'utf-8')), file: filename}
-        termVec.push(termVec);
-        fs.writeFileSync(`data/stemmed/${filename.replace("txt", "json")}`, JSON.stringify(termVec));
+        let trimmed = trim(fs.readFileSync('data/collection/' + filename, 'utf-8'));
+        matrix = [...matrix, ...(remap(trimmed, filename))];
     });
-    return termVec;
+    fs.writeFileSync(`data/processed.json`, JSON.stringify(matrix));
+    return matrix;
 }
 
 // Stem and remove duplicities from loaded data
-function stemAndLemmatize(data) {
-    const stem = natural.PorterStemmer.tokenizeAndStem(data);
-    const withoutStops = sw.removeStopwords(stem);
+function trim(data) {
+    const withoutStops = sw.removeStopwords(data.split(' '));
+    return natural.PorterStemmer.tokenizeAndStem(withoutStops.join(' '));
+}
+
+// Map to format with word, frequency and filename
+function remap(data, filename) {
+    // Add frequencies
     let freqMap = {}
-    withoutStops.forEach((word) => {
+    data.forEach((word) => {
         if (!freqMap[word])
             freqMap[word] = 0;
         freqMap[word]++;
     });
-    return freqMap;
-}
 
-// Load vectors from json files, returns term vectors
-function loadVectors(files) {
+    // Map to frequencies and document
     let termVec = [];
-    files.forEach((filename) => {
-        termVec.push(JSON.parse(fs.readFileSync('data/stemmed/' + filename, 'utf-8')));
-    });
+    for (let [key, value] of Object.entries(freqMap)) {
+        termVec.push({word: key, freq: value, filename: filename.replace('.txt', '')})
+    }
     return termVec;
 }
 
 // Load the term vectors depending on whether we have preprocessed json docs or not
-function load() {
+function processDocuments() {
     const orig = fs.readdirSync('data/collection');
-
-    // create stemmed folder if it doesn't already exist
-    if (!fs.existsSync('data/stemmed')) {
-        console.log('here');
-        fs.mkdirSync('data/stemmed');
-        return preprocessFiles(orig);
-    }
-    const stemmed = fs.readdirSync('data/stemmed');
-
-    // process documents or just load from json if available
-    if (stemmed.filter((name) => name.replace('.json', ''))
-        !== orig.filter((name) => name.replace('.txt', '')))
-        return preprocessFiles(orig);
+    if (fs.existsSync('data/processed.json'))
+        return JSON.parse(fs.readFileSync('data/processed.json', 'utf-8'));
     else
-        return loadVectors(stemmed);
+        return preprocessFiles(orig);
 }
 
-module.exports = load;
+module.exports = processDocuments;
