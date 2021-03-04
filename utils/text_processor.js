@@ -1,11 +1,12 @@
 const natural = require('natural');
 const fs = require('fs');
+const sw = require('stopword')
 
 // Preprocess files into json stemmed files and return term vectors
 function preprocessFiles(files) {
     let termVec = [];
     files.forEach((filename) => {
-        let termVec = {content: stem(fs.readFileSync('data/collection/' + filename, 'utf-8')), file: filename}
+        let termVec = {content: stemAndLemmatize(fs.readFileSync('data/collection/' + filename, 'utf-8')), file: filename}
         termVec.push(termVec);
         fs.writeFileSync(`data/stemmed/${filename.replace("txt", "json")}`, JSON.stringify(termVec));
     });
@@ -13,10 +14,11 @@ function preprocessFiles(files) {
 }
 
 // Stem and remove duplicities from loaded data
-function stem(data) {
+function stemAndLemmatize(data) {
     const stem = natural.PorterStemmer.tokenizeAndStem(data);
+    const withoutStops = sw.removeStopwords(stem);
     let freqMap = {}
-    stem.forEach((word) => {
+    withoutStops.forEach((word) => {
         if (!freqMap[word])
             freqMap[word] = 0;
         freqMap[word]++;
