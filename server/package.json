@@ -2,7 +2,7 @@
   "name": "extended-boolean-model",
   "version": "1.0.0",
   "description": "Project for BI-VWM",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon app.js"
   },
