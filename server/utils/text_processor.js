@@ -1,6 +1,7 @@
 const natural = require('natural');
 const fs = require('fs');
-const sw = require('stopword')
+const sw = require('stopword');
+const remap = require('term_by_document');
 
 // Preprocess files into json stemmed files and return term vectors
 function preprocessFiles(files) {
@@ -17,24 +18,6 @@ function preprocessFiles(files) {
 function trim(data) {
     const withoutStops = sw.removeStopwords(data.split(' '));
     return natural.PorterStemmer.tokenizeAndStem(withoutStops.join(' '));
-}
-
-// Map to format with word, frequency and filename
-function remap(data, filename) {
-    // Add frequencies
-    let freqMap = {}
-    data.forEach((word) => {
-        if (!freqMap[word])
-            freqMap[word] = 0;
-        freqMap[word]++;
-    });
-
-    // Map to frequencies and document
-    let termVec = [];
-    for (let [key, value] of Object.entries(freqMap)) {
-        termVec.push({word: key, freq: value, filename: filename.replace('.txt', '')})
-    }
-    return termVec;
 }
 
 // Load the term vectors depending on whether we have preprocessed json docs or not
