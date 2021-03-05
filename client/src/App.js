@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
 import './App.css';
 import FileList from './components/FileList'
+import TextField from '@material-ui/core/TextField'
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from '@material-ui/icons/Search';
+
 
 function App() {
 
@@ -19,8 +24,18 @@ function App() {
   return (
     <div className="App">
       <form className="search-form">
-        <input onChange={inputTextHandler} className="search-bar" type="text" value={input} placeholder="Type expression..."/>
-        <button className="search-button" onClick={buttonHandler}>Search</button>
+      <TextField className="search-bar"  label="Type expression..." value={input} onChange={inputTextHandler}
+                variant="outlined"
+                InputProps={{
+                    endAdornment: (
+                      <InputAdornment>
+                        <IconButton onClick={buttonHandler}>
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+            />
       </form>
       <FileList />
     </div>

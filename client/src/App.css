@@ -1,7 +1,7 @@
 .App {
   text-align: center;
   min-height: 100vh;
-  background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
+  background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%); 
 }
 
 .search-form{
@@ -9,33 +9,16 @@
   justify-content: center;
   align-items: center;
   padding-top: 5vh;
-  padding-bottom: 2vh;
+  padding-bottom: 4vh;
   height: 7vh;
   min-height: 50px;
 }
 
-.search-button{
-  transition-duration: 0.7s;
-  border: none;
-  border-radius: 10px;
-  height: 60%;
-  outline: none;
-
-}
-
-.search-button:hover{
-  background-color: #66a6ff;
-  color: white;
-}
 
 .search-bar{
-  font-size: 1.2rem;
   width: 40vw;
   margin-right: 5px;
-  border: none;
-  border-radius: 10px;
   height: 60%;
-  outline: none;
 }
 
 .file-list{
