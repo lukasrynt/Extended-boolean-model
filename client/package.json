@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "dependencies": "npm i @material-ui/core @material-ui/icons react react-dom react react-dom react-router-dom react-srcipts web-vitals",
+    "install": "react-scripts npm i @material-ui/core @material-ui/icons react",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
