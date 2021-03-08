@@ -1,13 +1,12 @@
 import React from 'react';
-import data from '../test_data/data'
 import File from './File'
 import '../App.css';
 
-const FileList = () => {
+const FileList = ( {pageNumber, data} ) => {
     return (
         <div className="file-list">
-            {data.map(data =>(
-                <File text={data}/>
+            {data.slice(5 * pageNumber, 5 * pageNumber + 5).map(data =>(
+                <File text={data.split(' ').slice(0, 90).join(' ')}/>
             ))}
         </div>
     )

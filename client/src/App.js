@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import './App.css';
+import data from './test_data/data'
+import data2 from './test_data/data2'
 import FileList from './components/FileList'
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -21,6 +23,8 @@ function App() {
     setInput("");
   }
 
+  var pageNumber = 0;
+
   return (
     <div className="App">
       <form className="search-form">
@@ -37,7 +41,7 @@ function App() {
                   }}
             />
       </form>
-      <FileList />
+      <FileList pageNumber={pageNumber} data={data}/>
     </div>
   );
 }
