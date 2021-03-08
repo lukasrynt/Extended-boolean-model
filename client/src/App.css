@@ -14,7 +14,6 @@
   min-height: 50px;
 }
 
-
 .search-bar{
   width: 40vw;
   margin-right: 5px;
@@ -33,4 +32,10 @@
 
 .link{
   text-decoration: none;
+}
+
+.paging{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
