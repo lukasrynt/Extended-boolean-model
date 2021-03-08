@@ -1,17 +1,20 @@
 const natural = require('natural');
 const fs = require('fs');
 const sw = require('stopword');
-const remap = require('term_by_document');
+const {freqs, createTermByDocMatrix} = require('./frequencies_remap');
 
 // Preprocess files into json stemmed files and return term vectors
 function preprocessFiles(files) {
-    let matrix = [];
+    let termFreq = [];
+    let numberOfFiles = 0;
     files.forEach((filename) => {
         let trimmed = trim(fs.readFileSync('data/collection/' + filename, 'utf-8'));
-        matrix = [...matrix, ...(remap(trimmed, filename))];
+        termFreq = [...termFreq, ...(freqs(trimmed, filename))];
+        numberOfFiles++;
     });
-    fs.writeFileSync(`data/processed.json`, JSON.stringify(matrix));
-    return matrix;
+    let termByDocMatrix = createTermByDocMatrix(termFreq, numberOfFiles);
+    fs.writeFileSync(`data/processed.json`, JSON.stringify(termByDocMatrix));
+    return termByDocMatrix;
 }
 
 // Stem and remove duplicities from loaded data

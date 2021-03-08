@@ -1,7 +1,7 @@
 // Imports
 const express = require('express');
-const processDocuments = require('./utils/text_processor');
-const remap = require('./utils/term_by_document')
+const processDocuments = require('./document_processing/text_processor');
+const remap = require('./document_processing/frequencies_remap')
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 })
 
 // Process documents into matrix
-remap(processDocuments());
+console.log(processDocuments());
 
 // Listen to port
 const port = process.env.PORT || 3000;

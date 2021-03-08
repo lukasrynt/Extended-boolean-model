@@ -6,4 +6,9 @@ router.get('/', (req, res) => {
     res.send('We received some query...');
 })
 
+// handle queries
+router.post((req, res) => {
+
+})
+
 module.exports = router;
