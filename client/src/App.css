@@ -1,5 +1,16 @@
+*{
+  margin:0;
+  padding:0;
+}
+
+.window{
+  min-height: 100vh;
+  background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%); 
+}
+
 .App {
   text-align: center;
+  padding-left: calc(100vw - 100%);
   min-height: 100vh;
   background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%); 
 }
@@ -22,20 +33,49 @@
 
 .file-list{
   width: 80vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   margin: auto;
-  align-items: center;
+  padding-bottom: 3rem;
 }
 
 .file{
-  padding-bottom: 15px;
+  margin: 1rem 0rem;
+  padding: 2rem;
+  border-radius: 3rem;
+  background: linear-gradient(
+    to left top,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.7)
+  );
+  box-shadow: 6px 6px 20px rgba(122, 122, 122, 0.3);
 }
 
 .link{
+  padding-top: 1rem;
   text-decoration: none;
+  list-style: none;
 }
 
 .paging{
-  display: flex;
+  /*display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;*/
+
+  padding-left: calc(100vw - 100%);
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+}
+
+.content{
+  padding-top: 5vh;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  text-align: center;
+  width: 80vw;
 }
