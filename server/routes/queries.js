@@ -8,12 +8,11 @@ router.get('/', (req, res) => {
 });
 
 // handle queries
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
     // Parse the query
-    let parsedRequest = await parseRequest(req.body.query);
+    let parsedRequest = parseRequest(req.body.query);
     console.log(parsedRequest);
     res.json(parsedRequest);
-    // res.json(await calculateResults(parsedRequest))
 });
 
 module.exports = router;
