@@ -85,7 +85,17 @@ function parseExpression(tokens, idx) {
 }
 
 function parseTerm(tokens, idx) {
-
+    if (tokens[idx.value] === '(') {
+        idx.value++;
+        let nd = parseExpression(tokens, {value: idx.value});
+        if (tokens[idx.value] !== ')')
+            throw new Error("Parity of parentheses in query is not correct");
+        idx.value++;
+        return nd;
+    } else {
+        idx.value++;
+        return new Node(tokens[idx]);
+    }
 }
 
 module.exports = parseQuery;
