@@ -57,7 +57,7 @@ function tokenize(query) {
     return res;
 }
 
-function leftBracket(tokens){
+function leftBracket(tokens, i){
     let parenthesesCnt = 0;
     for (let j = i - 1; j >= 0; j--)
     {
@@ -68,13 +68,12 @@ function leftBracket(tokens){
         if (parenthesesCnt == 0)
         {
             tokens.splice(j, 0, "(");
-            i++;
             break;
         }
     }
 }
 
-function rightBracket(tokens){
+function rightBracket(tokens, i){
     let parenthesesCnt = 0;
     for (let j = i + 1; j < tokens.length; j++)
     {
@@ -85,7 +84,6 @@ function rightBracket(tokens){
         if (parenthesesCnt == 0)
         {
             tokens.splice(j, 0, ")");
-            i++; 
             break;
         }
     }
@@ -102,7 +100,8 @@ function fillParentheses(tokens){
                 i++;
             }
             else{
-                leftBracket(tokens)
+                leftBracket(tokens, i)
+                i++;
             }    
             if (tokens[i + 1] != "(")
             {
@@ -110,7 +109,8 @@ function fillParentheses(tokens){
                 i++;
             }
             else{
-                rightBracket(tokens);
+                rightBracket(tokens, i);
+                i++;
             }    
         }
         
@@ -127,6 +127,7 @@ function parseQuery(query) {
     let tokens = tokenize(query);
     console.log(tokens);
     fillParentheses(tokens);
+    console.log(tokens);
     let idx = {value: 0};
     return parseExpression(tokens, idx);
 }
