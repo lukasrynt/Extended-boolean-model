@@ -3,13 +3,13 @@ function Node(value) {
 }
 
 function AndNode(rVal, lVal) {
-    this.rVal = rVal;
     this.lVal = lVal;
+    this.rVal = rVal;
 }
 
 function OrNode(rVal, lVal) {
-    this.rVal = rVal;
     this.lVal = lVal;
+    this.rVal = rVal;
 }
 
 module.exports = {Node, AndNode, OrNode};

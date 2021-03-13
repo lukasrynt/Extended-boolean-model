@@ -37,6 +37,7 @@ function tokenize(query) {
                     if (c === token[token.length - 1])
                     {
                         token.pop(); // remove last char
+                            if (token.length)
                         res.push(token.join('').trim()); // add the word before
                         token = [];
                         res.push(c === '&' ? "&&" : "||");
@@ -51,6 +52,8 @@ function tokenize(query) {
                 break;
         }
     }
+    if (token.length)
+        res.push(token.join('').trim());
     return res;
 }
 
@@ -63,38 +66,40 @@ function parseQuery(query) {
     // tokenize entry string
     let tokens = tokenize(query);
     console.log(tokens);
-    let idx = 0;
-    return parseExpression(tokens, {value: idx});
+    let idx = {value: 0};
+    return parseExpression(tokens, idx);
 }
 
 function parseExpression(tokens, idx) {
-    let leftExp = parseTerm(tokens, {value: idx.value});
+    let leftExp = parseTerm(tokens, idx);
     if (idx.value >= tokens.length)
         return leftExp;
 
     if (tokens[idx.value] === "&&") {
         idx.value++;
-        let rightExp = parseExpression(tokens, {value: idx.value});
+        let rightExp = parseExpression(tokens, idx);
         return new AndNode(rightExp, leftExp);
     }
     else if (tokens[idx.value] === "||") {
         idx.value++;
-        let rightExp = parseExpression(tokens, {value: idx.value});
+        let rightExp = parseExpression(tokens, idx);
         return new OrNode(rightExp, leftExp);
+    }else{
+        return leftExp;
     }
 }
 
 function parseTerm(tokens, idx) {
     if (tokens[idx.value] === '(') {
         idx.value++;
-        let nd = parseExpression(tokens, {value: idx.value});
+        let nd = parseExpression(tokens, idx);
         if (tokens[idx.value] !== ')')
             throw new Error("Parity of parentheses in query is not correct");
         idx.value++;
         return nd;
     } else {
         idx.value++;
-        return new Node(tokens[idx]);
+        return new Node(tokens[idx.value - 1]);
     }
 }
 

@@ -11,7 +11,8 @@ router.get('/', (req, res) => {
 router.post('/', async (req, res) => {
     // Parse the query
     let parsedRequest = await parseRequest(req.body.query);
-    console.log(req.data);
+    console.log(parsedRequest);
+    res.json(parsedRequest);
     // res.json(await calculateResults(parsedRequest))
 });
 
