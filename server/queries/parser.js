@@ -57,6 +57,66 @@ function tokenize(query) {
     return res;
 }
 
+function leftBracket(tokens){
+    let parenthesesCnt = 0;
+    for (let j = i - 1; j >= 0; j--)
+    {
+        if (tokens[j] == ")")
+            parenthesesCnt++;
+        if (tokens[j] == "(")
+            parenthesesCnt--;
+        if (parenthesesCnt == 0)
+        {
+            tokens.splice(j, 0, "(");
+            i++;
+            break;
+        }
+    }
+}
+
+function rightBracket(tokens){
+    let parenthesesCnt = 0;
+    for (let j = i + 1; j < tokens.length; j++)
+    {
+        if (tokens[j] == "(")
+            parenthesesCnt++;
+        if (tokens[j] == ")")
+             parenthesesCnt--;
+        if (parenthesesCnt == 0)
+        {
+            tokens.splice(j, 0, ")");
+            i++; 
+            break;
+        }
+    }
+}
+
+function fillParentheses(tokens){
+    for (let i = 1; i < tokens.length - 1; i++)
+    {
+        if (tokens[i] == "&&")
+        {
+            if (tokens[i - 1] != ")")
+            {
+                tokens.splice(i - 1, 0, "(");
+                i++;
+            }
+            else{
+                leftBracket(tokens)
+            }    
+            if (tokens[i + 1] != "(")
+            {
+                tokens.splice(i + 2, 0, ")");
+                i++;
+            }
+            else{
+                rightBracket(tokens);
+            }    
+        }
+        
+    }
+}
+
 /**
  * Takes query and processes it into AST of terms
  * @param query query to be parsed
@@ -66,6 +126,7 @@ function parseQuery(query) {
     // tokenize entry string
     let tokens = tokenize(query);
     console.log(tokens);
+    fillParentheses(tokens);
     let idx = {value: 0};
     return parseExpression(tokens, idx);
 }
