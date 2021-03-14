@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 let maxFreq = {};
 let dfMap = {};
 let numberOfTerms = 0;
@@ -21,9 +23,7 @@ function freqs(data, filename) {
     return termVec;
 }
 
-function createTermByDocMatrix(termFreq, numberOfFiles) {
-
-    // count tf and idf
+function processTF_IDF(termFreq) {
     termFreq.forEach(({word, freq, filename}) => {
         if (!maxFreq[word] || maxFreq[word] < freq)
             maxFreq[word] = freq;
@@ -33,13 +33,46 @@ function createTermByDocMatrix(termFreq, numberOfFiles) {
         }
         dfMap[word].add(filename);
     });
+}
 
-    // create term by document sparse matrix in form of dictionary with two keys
-    let matrix = {};
+function createInvertedIndex(termFreq, numberOfFiles) {
+    if (Object.getOwnPropertyNames(dfMap).length === 0)
+        processTF_IDF(termFreq);
+
+    // create inverted index
+    let invertedIndex = {};
     termFreq.forEach(({word, freq, filename}) => {
-        matrix[[word, filename]] = tf(word, freq) * idf(word, numberOfFiles);
+        if (!invertedIndex[word])
+            invertedIndex[word] = [];
+        let weight = tf(word, freq) * idf(word, numberOfFiles);
+        if (weight)
+            invertedIndex[word].push({file: parseInt(filename), weight: weight});
     });
-    return matrix;
+    return invertedIndex;
+}
+
+function createTDM(termFreq, numberOfFiles) {
+    if (Object.getOwnPropertyNames(dfMap).length === 0)
+        processTF_IDF(termFreq);
+
+    // create term by document sparse matrix in form of 2D array a mapper from word to index
+    let matrix = new Array(numberOfFiles);
+    for (let i = 0; i < numberOfFiles; ++i)
+        matrix[i] = new Array(10).fill(0);
+    let wordToIdx = {};
+    let idx = 0;
+    termFreq.forEach(({word, freq, filename}) => {
+        let fileIdx = parseInt(filename) - 1;
+        if (!wordToIdx[word]) {
+            wordToIdx[word] = idx;
+            while (matrix[fileIdx].length < idx)
+                matrix[fileIdx].push(0);
+        }
+        matrix[fileIdx][wordToIdx[word]] = tf(word, freq) * idf(word, numberOfFiles);
+        idx++;
+    });
+
+    return {matrix, wordToIdx};
 }
 
 function tf(word, freq) {
@@ -47,7 +80,8 @@ function tf(word, freq) {
 }
 
 function idf(word, numberOfFiles) {
-    return Math.log2(numberOfFiles/dfMap[word].size)
+
+    return Math.log2(numberOfFiles/dfMap[word].size);
 }
 
-module.exports = {freqs, createTermByDocMatrix};
+module.exports = {freqs, createTDM, createInvertedIndex};

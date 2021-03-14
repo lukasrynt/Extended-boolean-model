@@ -1,7 +1,7 @@
 const natural = require('natural');
 const fs = require('fs');
 const sw = require('stopword');
-const {freqs, createTermByDocMatrix} = require('./frequencies_remap');
+const {freqs, createTDM, createInvertedIndex} = require('./frequencies_remap');
 
 // Preprocess files into json stemmed files and return term vectors
 function preprocessFiles(files) {
@@ -12,9 +12,11 @@ function preprocessFiles(files) {
         termFreq = [...termFreq, ...(freqs(trimmed, filename))];
         numberOfFiles++;
     });
-    let termByDocMatrix = createTermByDocMatrix(termFreq, numberOfFiles);
-    fs.writeFileSync(`data/processed.json`, JSON.stringify(termByDocMatrix));
-    return termByDocMatrix;
+    let TDM = createTDM(termFreq, numberOfFiles);
+    let invertedIndex = createInvertedIndex(termFreq, numberOfFiles);
+    fs.writeFileSync(`data/term_by_doc_matrix.json`, JSON.stringify(TDM, null, 2));
+    fs.writeFileSync(`data/inverted_index.json`, JSON.stringify(invertedIndex, null, 2));
+    return TDM;
 }
 
 // Stem and remove duplicities from loaded data
@@ -25,9 +27,10 @@ function trim(data) {
 
 // Load the term vectors depending on whether we have preprocessed json docs or not
 function processDocuments() {
+    const path = 'data/inverted_index.json';
     const orig = fs.readdirSync('data/collection');
-    if (fs.existsSync('data/processed.json'))
-        return JSON.parse(fs.readFileSync('data/processed.json', 'utf-8'));
+    if (fs.existsSync(path))
+        return JSON.parse(fs.readFileSync(path, 'utf-8'));
     else
         return preprocessFiles(orig);
 }

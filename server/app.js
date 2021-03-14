@@ -1,7 +1,6 @@
 // Imports
 const express = require('express');
 const processDocuments = require('./document_processing/text_processor');
-const remap = require('./document_processing/frequencies_remap')
 
 const app = express();
 let processedDocs;
