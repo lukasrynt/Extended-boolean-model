@@ -11,7 +11,7 @@ function App() {
       <div className="window">
         <Switch>
           <Route path="/" exact component={Home}/>
-          <Route className="link" path="/about/:id" exact component={Content} />
+          <Route className="link" path="/about" exact component={Content} />
         </Switch>
       </div>
       </Router>
