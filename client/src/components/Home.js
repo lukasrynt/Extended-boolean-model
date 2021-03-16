@@ -1,7 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../App.css';
-import data from '../test_data/data'
-import data2 from '../test_data/data2'
 import {Pagination} from '@material-ui/lab'
 import FileList from './FileList'
 import TextField from '@material-ui/core/TextField'
@@ -9,13 +7,35 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from '@material-ui/icons/Search';
 
-const Home = ( props ) => {
+const Home = () => {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [input, setInput] = useState("");
 
     const pageHandler = (event, value) => {
-        setPage(value - 1);
+      setPage(value - 1);
+    };
+
+    useEffect(() => {
+      getLocalData();
+    }, []);
+
+    useEffect(() => {
+      saveLocalData();
+    }, [data])
+
+    // save to local storage
+    const saveLocalData =  () => {
+      localStorage.setItem("data", JSON.stringify(data));
+    };
+    // get local storage
+    const getLocalData = () => {
+      if (localStorage.getItem("data") == null){
+        setData([]);
+      }else{
+        let dataLocal = JSON.parse(localStorage.getItem("data"));
+        setData(dataLocal);
+      }
     };
 
     const requestOptions = {
@@ -30,9 +50,10 @@ const Home = ( props ) => {
   
     const buttonHandler = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost:3000/queries', requestOptions);
+        const response = await fetch('http://localhost:5000/queries', requestOptions);
         setData(await response.json())
-        setInput("");
+        await setInput("");
+        await setPage(0);
     };
   
     return (
@@ -52,7 +73,7 @@ const Home = ( props ) => {
                 />
           </form>
           <FileList pageNumber={page} data={data}/>
-          <Pagination className="paging" size="large" color="primary" onChange={pageHandler} count={Math.ceil(data.length / 5)}/>
+          <Pagination page={page + 1} className="paging" size="large" color="primary" onChange={pageHandler} count={Math.ceil(data.length / 5)}/>
         </div>
     );
   }
