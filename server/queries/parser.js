@@ -1,4 +1,5 @@
 const {Node, AndNode, OrNode} = require('./Node');
+const natural = require('natural')
 
 /**
  * Takes query and separates into tokens (words, &&, ||, '(', ')')
@@ -23,7 +24,7 @@ function tokenize(query) {
             case ')':
                 if (token.length > 0)
                 {
-                    res.push(token.join(''));
+                    res.push(natural.PorterStemmer.tokenizeAndStem(token.join('')));
                     token = [];
                 }
                 res.push(c);
@@ -38,7 +39,7 @@ function tokenize(query) {
                     {
                         token.pop(); // remove last char
                             if (token.length)
-                        res.push(token.join('').trim()); // add the word before
+                        res.push(natural.PorterStemmer.tokenizeAndStem(token.join('').trim())); // add the word before
                         token = [];
                         res.push(c === '&' ? "&&" : "||");
                         break;
@@ -53,7 +54,7 @@ function tokenize(query) {
         }
     }
     if (token.length)
-        res.push(token.join('').trim());
+        res.push(natural.PorterStemmer.tokenizeAndStem(token.join('').trim()));
     return res;
 }
 
