@@ -49,6 +49,7 @@ const Home = () => {
     };
   
     const buttonHandler = async (e) => {
+        debugger
         e.preventDefault();
         const response = await fetch('http://localhost:5000/queries', requestOptions);
         setData(await response.json())
@@ -58,19 +59,19 @@ const Home = () => {
   
     return (
       <div className="App">
-          <form className="search-form">
-          <TextField className="search-bar"  label="Type expression..." value={input} onChange={inputTextHandler}
-                    variant="outlined"
-                    InputProps={{
-                        endAdornment: (
-                          <InputAdornment>
-                            <IconButton onClick={buttonHandler}>
-                              <SearchIcon />
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                />
+          <form className="search-form" onSubmit={buttonHandler}>
+              <TextField className="search-bar"  label="Type expression..." value={input} onChange={inputTextHandler}
+                        variant="outlined"
+                        InputProps={{
+                            endAdornment: (
+                              <InputAdornment>
+                                <IconButton onClick={buttonHandler}>
+                                  <SearchIcon />
+                                </IconButton>
+                              </InputAdornment>
+                            )
+                          }}
+              />
           </form>
           <FileList pageNumber={page} data={data}/>
           <Pagination page={page + 1} className="paging" size="large" color="primary" onChange={pageHandler} count={Math.ceil(data.length / 5)}/>
