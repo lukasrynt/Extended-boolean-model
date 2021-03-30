@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
     let parsedRequest = parseRequest(req.body.query);
     console.log(parsedRequest);
     let fileNums = evalQuery(parsedRequest, req.processed);
-    res.json(loadFiles(fileNums, req.collectionPath));
+    res.json(loadFiles(fileNums.slice(0, 50), req.collectionPath));
 });
 
 module.exports = router;
