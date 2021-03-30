@@ -6,6 +6,7 @@
 .window{
   min-height: 100vh;
   background-image: linear-gradient(to right top, #65dfc9 0%, #6cdbeb 100%);
+  padding: 2rem 0;
 }
 
 .App {
@@ -137,4 +138,9 @@
 
 .content p{
   text-align: justify;
+}
+
+.content button{
+  margin-bottom: 1rem;
+  background-color: #65dfca;
 }

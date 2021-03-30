@@ -16,7 +16,7 @@ const Content = ( props ) => {
             <p>{content[0].content}</p>
             <Link className="link" to={{pathname:'/'}}  >
                 <Button variant="contained" size="large" startIcon={<ReplayIcon/>}>Back
-                    <li className="link"></li>
+                    <li className="link"/>
                 </Button>
             </Link>
         </div>
