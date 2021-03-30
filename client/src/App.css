@@ -53,13 +53,14 @@
   /*box-shadow: 6px 6px 20px rgba(122, 122, 122, 0.3);*/
   z-index: 2;
   backdrop-filter: blur(1rem);
+  transition: 0.3s;
 }
 
 .file p{
   text-align: justify;
 }
 
-.circle1, .circle2, .circle3, .circle4{
+.circle1, .circle2, .circle3, .circle4, .circle5{
   position: fixed;
   background: linear-gradient(
           to left bottom,
@@ -98,15 +99,25 @@
   top: 14%;
 }
 
+.circle5{
+  width: 5rem;
+  height: 5rem;
+  left: 2%;
+  top: 5%;
+}
+
 .link{
   padding-top: 1rem;
   text-decoration: none;
   list-style: none;
-  color: #52a9b1;
+  color: #305b60;
+  transition: 0.4s;
+  opacity: 0.5;
 }
 
 .link:hover{
-  color: #305b60;
+  /*color: #305b60;*/
+  opacity: 1;
 }
 
 .paging{
