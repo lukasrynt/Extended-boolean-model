@@ -9,7 +9,7 @@ const Content = ( props ) => {
     let data = props.location.data.data;
     return (
         <div className="content">
-            <h3 >{text.text}</h3>
+            <p>{text.text}</p>
             <Link className="link" to={{pathname:'/', data:{data}}}  >
                 <Button variant="contained" size="large" startIcon={<ReplayIcon/>}>Back
                     <li className="link"></li>

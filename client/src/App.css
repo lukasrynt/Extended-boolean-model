@@ -49,18 +49,17 @@
     rgba(255, 255, 255, 0.7),
     rgba(255, 255, 255, 0.3)
   );
-  box-shadow: 6px 6px 20px rgba(122, 122, 122, 0.3);
+  /*box-shadow: 6px 6px 20px rgba(122, 122, 122, 0.3);*/
   z-index: 2;
   backdrop-filter: blur(1rem);
 }
 
 .file p{
   text-align: justify;
-  color: black;
 }
 
-.circle1, .circle2, .circle3{
-  position: absolute;
+.circle1, .circle2, .circle3, .circle4{
+  position: fixed;
   background: linear-gradient(
           to left bottom,
           rgba(255, 255, 255, 0.7),
@@ -91,6 +90,13 @@
   bottom: 0;
 }
 
+.circle4{
+  width: 15rem;
+  height: 15rem;
+  left: 30%;
+  top: 14%;
+}
+
 .link{
   padding-top: 1rem;
   text-decoration: none;
@@ -112,10 +118,23 @@
 }
 
 .content{
-  padding-top: 5vh;
   display: flex;
   flex-direction: column;
   margin: auto;
   text-align: center;
   width: 80vw;
+  border-radius: 10px;
+  background: linear-gradient(
+          to right bottom,
+          rgba(255, 255, 255, 0.7),
+          rgba(255, 255, 255, 0.3)
+  );
+  /*box-shadow: 6px 6px 20px rgba(122, 122, 122, 0.3);*/
+  z-index: 2;
+  backdrop-filter: blur(1rem);
+  padding: 5vh 2rem 0 2rem;
+}
+
+.content p{
+  text-align: justify;
 }
