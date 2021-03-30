@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import File from './File'
 import '../App.css';
+import {BrowserRouter as Router} from "react-router-dom";
 
 const FileList = ( {pageNumber, data} ) => {
     return (
