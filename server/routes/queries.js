@@ -7,12 +7,12 @@ const evalQuery = require('../queries/evaluator');
 
 router.use(cors());
 
-function loadFiles(fileNums) {
+function loadFiles(fileNums, collectionPath) {
     let res = [];
     fileNums.forEach((fileNum) => {
         res.push({
             file: fileNum + '.txt',
-            content: fs.readFileSync('data/collection_8/' + fileNum + '.txt', 'utf-8')
+            content: fs.readFileSync(collectionPath + fileNum + '.txt', 'utf-8')
         });
     });
     return res;
@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
     let parsedRequest = parseRequest(req.body.query);
     console.log(parsedRequest);
     let fileNums = evalQuery(parsedRequest, req.processed);
-    res.json(loadFiles(fileNums));
+    res.json(loadFiles(fileNums, req.collectionPath));
 });
 
 module.exports = router;

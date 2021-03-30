@@ -8,10 +8,13 @@ let processedDocs;
 // import middleware
 app.use(express.json());
 
+const collectionPath = 'data/collection_3000/';
+
 // Import routes
 const queriesRoutes = require('./routes/queries');
 app.use('/queries', (req, res, next) => {
     req.processed = processedDocs;
+    req.collectionPath = collectionPath;
     next();
 }, queriesRoutes)
 
@@ -20,7 +23,7 @@ app.get('/', (req, res) => {
 });
 
 // Process documents into matrix
-processedDocs = processDocuments();
+processedDocs = processDocuments(collectionPath);
 
 // Listen to port
 const port = process.env.PORT || 5000;

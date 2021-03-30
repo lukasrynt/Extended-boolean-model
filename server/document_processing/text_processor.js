@@ -3,7 +3,7 @@ const fs = require('fs');
 const sw = require('stopword');
 const {freqs, createInvertedIndex} = require('./frequencies_remap');
 
-const collectionPath = 'data/collection_3000/'
+let collectionPath;
 
 // Preprocess files into json stemmed files and return term vectors
 function preprocessFiles(files) {
@@ -28,7 +28,8 @@ function trim(data) {
 }
 
 // Load the term vectors depending on whether we have preprocessed json docs or not
-function processDocuments() {
+function processDocuments(cltPath) {
+    collectionPath = cltPath;
     const path = 'data/inverted_index.json';
     const orig = fs.readdirSync(collectionPath);
     if (fs.existsSync(path))
