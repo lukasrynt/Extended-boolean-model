@@ -5,12 +5,16 @@ import ReplayIcon from '@material-ui/icons/Replay';
 
 
 const Content = ( props ) => {
-    let text = props.location.text;
-    let data = props.location.data.data;
+    let content = [{content: ""}]
+    if (localStorage.getItem("data") != null){
+        let dataLocal = JSON.parse(localStorage.getItem("data"));
+        content = dataLocal.filter(file => file.file === props.match.params.id + ".txt");
+    }
+   
     return (
         <div className="content">
-            <p>{text.text}</p>
-            <Link className="link" to={{pathname:'/', data:{data}}}  >
+            <p>{content[0].content}</p>
+            <Link className="link" to={{pathname:'/'}}  >
                 <Button variant="contained" size="large" startIcon={<ReplayIcon/>}>Back
                     <li className="link"></li>
                 </Button>

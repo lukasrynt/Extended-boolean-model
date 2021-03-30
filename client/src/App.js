@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
@@ -11,7 +11,7 @@ function App() {
           <div className="window">
               <Switch>
                   <Route path="/" exact component={Home}/>
-                  <Route className="link" path="/about" exact component={Content} />
+                  <Route className="link" path="/about/:id" exact component={Content} />
               </Switch>
           </div>
           <div className="circle1"/>

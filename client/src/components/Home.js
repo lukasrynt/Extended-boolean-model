@@ -21,13 +21,15 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
-      saveLocalData();
+      // save to local storage
+      localStorage.setItem("data", JSON.stringify(data));
     }, [data])
 
-    // save to local storage
-    const saveLocalData =  () => {
-      localStorage.setItem("data", JSON.stringify(data));
-    };
+    useEffect(() => {
+      // save to local storage
+      localStorage.setItem("page", JSON.stringify(page));
+    }, [page])
+
     // get local storage
     const getLocalData = () => {
       if (localStorage.getItem("data") == null){
@@ -35,6 +37,11 @@ const Home = () => {
       }else{
         let dataLocal = JSON.parse(localStorage.getItem("data"));
         setData(dataLocal);
+      }
+      if (localStorage.getItem("page") == null){
+          setPage(0)
+      }else{
+        setPage(JSON.parse(localStorage.getItem("page")));
       }
     };
 
