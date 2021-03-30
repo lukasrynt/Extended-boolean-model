@@ -12,7 +12,7 @@ function loadFiles(fileNums) {
     fileNums.forEach((fileNum) => {
         res.push({
             file: fileNum + '.txt',
-            content: fs.readFileSync('data/collection/' + fileNum + '.txt', 'utf-8')
+            content: fs.readFileSync('data/collection_8/' + fileNum + '.txt', 'utf-8')
         });
     });
     return res;
