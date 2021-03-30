@@ -74,9 +74,9 @@ function parseAnd(processedQuery) {
         if (left.content[l].file === right.content[r].file) {
             resContent.push({
                 file: left.content[l].file,
-                weight: 1 - Math.sqrt( Math.pow(1 - left.content[l].weight, 2) + Math.pow(1 - right.content[r].weight, 2) / 2 )
+                weight: 1 - Math.sqrt( (Math.pow(1 - left.content[l].weight, 2) + Math.pow(1 - right.content[r].weight, 2)) / 2 )
             });
-            l++
+            l++;
             r++;
         }
         else if (left.content[l].file < right.content[r].file)
