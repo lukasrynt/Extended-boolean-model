@@ -49,7 +49,6 @@ const Home = () => {
     };
   
     const buttonHandler = async (e) => {
-        debugger
         e.preventDefault();
         const response = await fetch('http://localhost:5000/queries', requestOptions);
         setData(await response.json())
