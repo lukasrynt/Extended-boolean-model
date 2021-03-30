@@ -1,6 +1,17 @@
 const {Node, AndNode, OrNode} = require('./Node');
 const natural = require('natural')
 
+
+function insertFullToken(res, token) {
+    token = token.trim();
+    if (token === "and")
+        res.push("&&");
+    else if (token === "or")
+        res.push("||");
+    else
+        res.push(natural.PorterStemmer.tokenizeAndStem(token));
+}
+
 /**
  * Takes query and separates into tokens (words, &&, ||, '(', ')')
  * @param query query to be tokenized
@@ -8,7 +19,7 @@ const natural = require('natural')
  * @inspired-by https://www.meziantou.net/creating-a-parser-for-boolean-expressions.htm
  */
 function tokenize(query) {
-    let token = [];
+    let token = "";
     let res = [];
     for (let i = 0; i < query.length; i++)
     {
@@ -16,16 +27,18 @@ function tokenize(query) {
         switch (c)
         {
             case ' ':
-                if (token.length > 0)
-                    token.push(c);
+                if (token.length > 0) {
+                    insertFullToken(res, token);
+                    token = "";
+                }
                 break;
 
             case '(':
             case ')':
                 if (token.length > 0)
                 {
-                    res.push(natural.PorterStemmer.tokenizeAndStem(token.join('')));
-                    token = [];
+                    insertFullToken(res, token)
+                    token = "";
                 }
                 res.push(c);
                 break;
@@ -37,24 +50,29 @@ function tokenize(query) {
                     // add && or ||
                     if (c === token[token.length - 1])
                     {
-                        token.pop(); // remove last char
-                            if (token.length)
-                        res.push(natural.PorterStemmer.tokenizeAndStem(token.join('').trim())); // add the word before
-                        token = [];
+                        token.slice(0, -1); // remove last char
+                        if (token.length) insertFullToken(res, token); // add the word before
+                        token = "";
                         res.push(c === '&' ? "&&" : "||");
                         break;
                     }
+                } else {
+                    // add & or |
+                    if (token.length) insertFullToken(res, token);
+                    token = "";
+                    res.push(c === '&' ? "&&" : "||");
+                    break;
                 }
-                token.push(c);
+                token += c;
                 break;
 
             default:
-                token.push(c);
+                token += c;
                 break;
         }
     }
     if (token.length)
-        res.push(natural.PorterStemmer.tokenizeAndStem(token.join('').trim()));
+        insertFullToken(res, token);
     return res;
 }
 

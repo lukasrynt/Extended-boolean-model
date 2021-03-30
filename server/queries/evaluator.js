@@ -40,6 +40,16 @@ function parseOr(processedQuery) {
         else if (left.content[l].file > right.content[r].file)
             r++;
     }
+    for (;l < left.content.length; ++l)
+        resContent.push({
+            file: left.content[l].file,
+            weight: left.content[l].weight
+        });
+    for (;r < right.content.length; ++r)
+        resContent.push({
+            file: right.content[r].file,
+            weight: right.content[r].weight
+        });
     return {
         expression: resExpression,
         content: resContent

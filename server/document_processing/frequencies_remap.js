@@ -51,29 +51,29 @@ function createInvertedIndex(termFreq, numberOfFiles) {
     return invertedIndex;
 }
 
-function createTDM(termFreq, numberOfFiles) {
-    if (Object.getOwnPropertyNames(dfMap).length === 0)
-        processTF_IDF(termFreq);
-
-    // create term by document sparse matrix in form of 2D array a mapper from word to index
-    let matrix = new Array(numberOfFiles);
-    for (let i = 0; i < numberOfFiles; ++i)
-        matrix[i] = new Array(10).fill(0);
-    let wordToIdx = {};
-    let idx = 0;
-    termFreq.forEach(({word, freq, filename}) => {
-        let fileIdx = parseInt(filename) - 1;
-        if (!wordToIdx[word]) {
-            wordToIdx[word] = idx;
-            while (matrix[fileIdx].length < idx)
-                matrix[fileIdx].push(0);
-        }
-        matrix[fileIdx][wordToIdx[word]] = tf(word, freq) * idf(word, numberOfFiles);
-        idx++;
-    });
-
-    return {matrix, wordToIdx};
-}
+// function createTDM(termFreq, numberOfFiles) {
+//     if (Object.getOwnPropertyNames(dfMap).length === 0)
+//         processTF_IDF(termFreq);
+//
+//     // create term by document sparse matrix in form of 2D array a mapper from word to index
+//     let matrix = new Array(numberOfFiles);
+//     for (let i = 0; i < numberOfFiles; ++i)
+//         matrix[i] = new Array(10).fill(0);
+//     let wordToIdx = {};
+//     let idx = 0;
+//     termFreq.forEach(({word, freq, filename}) => {
+//         let fileIdx = parseInt(filename) - 1;
+//         if (!wordToIdx[word]) {
+//             wordToIdx[word] = idx;
+//             while (matrix[fileIdx].length < idx)
+//                 matrix[fileIdx].push(0);
+//         }
+//         matrix[fileIdx][wordToIdx[word]] = tf(word, freq) * idf(word, numberOfFiles);
+//         idx++;
+//     });
+//
+//     return {matrix, wordToIdx};
+// }
 
 function tf(word, freq) {
     return freq / maxFreq[word];
@@ -84,4 +84,4 @@ function idf(word, numberOfFiles) {
     return Math.log2(numberOfFiles/dfMap[word].size);
 }
 
-module.exports = {freqs, createTDM, createInvertedIndex};
+module.exports = {freqs, createInvertedIndex};

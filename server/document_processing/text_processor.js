@@ -1,7 +1,7 @@
 const natural = require('natural');
 const fs = require('fs');
 const sw = require('stopword');
-const {freqs, createTDM, createInvertedIndex} = require('./frequencies_remap');
+const {freqs, createInvertedIndex} = require('./frequencies_remap');
 
 // Preprocess files into json stemmed files and return term vectors
 function preprocessFiles(files) {
@@ -12,11 +12,11 @@ function preprocessFiles(files) {
         termFreq = [...termFreq, ...(freqs(trimmed, filename))];
         numberOfFiles++;
     });
-    let TDM = createTDM(termFreq, numberOfFiles);
+    // let TDM = createTDM(termFreq, numberOfFiles);
     let invertedIndex = createInvertedIndex(termFreq, numberOfFiles);
-    fs.writeFileSync(`data/term_by_doc_matrix.json`, JSON.stringify(TDM, null, 2));
+    // fs.writeFileSync(`data/term_by_doc_matrix.json`, JSON.stringify(TDM, null, 2));
     fs.writeFileSync(`data/inverted_index.json`, JSON.stringify(invertedIndex, null, 2));
-    return TDM;
+    return invertedIndex;
 }
 
 // Stem and remove duplicities from loaded data
