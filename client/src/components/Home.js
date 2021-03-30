@@ -65,6 +65,7 @@ const Home = () => {
   
     return (
       <div className="App">
+          <h1 className="project-name">Extended Boolean Model</h1>
           <form className="search-form" onSubmit={buttonHandler}>
               <TextField className="search-bar"  label="Type expression..." value={input} onChange={inputTextHandler}
                         variant="outlined"

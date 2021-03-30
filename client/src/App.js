@@ -13,6 +13,7 @@ function App() {
                   <Route path="/" exact component={Home}/>
                   <Route className="link" path="/about/:id" exact component={Content} />
               </Switch>
+              <footer>Created by: Lukáš Rynt, Martin Šír</footer>
           </div>
           <div className="circle1"/>
           <div className="circle2"/>

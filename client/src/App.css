@@ -20,7 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 5vh;
+  padding-top: 3vh;
   padding-bottom: 4vh;
   height: 7vh;
   min-height: 50px;
@@ -147,4 +147,24 @@
 
 .file-list {
   color: #305b60;
+  padding-bottom: 1rem;
+}
+
+footer {
+  margin: 1rem 0 0 2rem;
+  color: #305b60;
+  font-size: 12px;
+}
+
+.project-name{
+  font-family: cursive;
+  background: -webkit-linear-gradient(right, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 4rem;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #305b60;
 }
