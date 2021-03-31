@@ -27,7 +27,9 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     // Parse the query
     let parsedRequest = parseRequest(req.body.query);
+    console.log("---parsed---")
     console.log(parsedRequest);
+    console.log("------------")
     let fileNums = evalQuery(parsedRequest, req.processed);
     res.json(loadFiles(fileNums.slice(0, 50), req.collectionPath));
 });

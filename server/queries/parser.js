@@ -1,4 +1,4 @@
-const {Node, AndNode, OrNode} = require('./Node');
+const {Node, AndNode, OrNode, NotNode} = require('./Node');
 const natural = require('natural')
 
 
@@ -8,6 +8,8 @@ function insertFullToken(res, token) {
         res.push("&&");
     else if (token === "or")
         res.push("||");
+    else if (token === "not")
+        res.push("!");
     else
         res.push(natural.PorterStemmer.tokenizeAndStem(token));
 }
@@ -35,6 +37,7 @@ function tokenize(query) {
 
             case '(':
             case ')':
+            case '!':
                 if (token.length > 0)
                 {
                     insertFullToken(res, token)
@@ -154,6 +157,11 @@ function parseExpression(tokens, idx) {
     if (idx.value >= tokens.length)
         return leftExp;
 
+    if (tokens[idx.value] === '!') {
+        idx.value++;
+        let nd = parseExpression(tokens, idx);
+        return new NotNode(nd);
+    }
     if (tokens[idx.value] === "&&") {
         idx.value++;
         let rightExp = parseExpression(tokens, idx);
@@ -169,6 +177,11 @@ function parseExpression(tokens, idx) {
 }
 
 function parseTerm(tokens, idx) {
+    if (tokens[idx.value] === '!') {
+        idx.value++;
+        let nd = parseExpression(tokens, idx);
+        return new NotNode(nd);
+    }
     if (tokens[idx.value] === '(') {
         idx.value++;
         let nd = parseExpression(tokens, idx);
@@ -176,7 +189,8 @@ function parseTerm(tokens, idx) {
             throw new Error("Parity of parentheses in query is not correct");
         idx.value++;
         return nd;
-    } else {
+    }
+    else {
         idx.value++;
         return new Node(tokens[idx.value - 1]);
     }

@@ -2,15 +2,20 @@ let invertedIdx;
 
 function evaluate(processedQuery, invertedIndex) {
     invertedIdx = invertedIndex;
-    console.log(parse(processedQuery))
-    return parse(processedQuery).content
-        .sort((a, b) => {
+    let res = parse(processedQuery).content;
+    res.sort((a, b) => {
         return b.weight - a.weight;
-        }).map(value => value.file);
+    });
+    console.log("---processed---")
+    console.log(res)
+    console.log("---------------")
+    return res.map(value => value.file);
 }
 
 function parse(processedQuery) {
-    if (processedQuery.value)
+    if (processedQuery.operator === "!")
+        return parseNot(processedQuery);
+    else if (processedQuery.value)
         return parseTerm(processedQuery.value)
     else if (processedQuery.operator === "||")
         return parseOr(processedQuery);
@@ -95,6 +100,17 @@ function parseTerm(expression) {
         expression: expression,
         content: invertedIdx[expression]
     };
+}
+
+function parseNot(expression) {
+    let res = parse(expression.value);
+    res.content.forEach((item) => {
+        item.weight = 1 - item.weight;
+    });
+    return {
+        expression: res.expression,
+        content: res.content
+    }
 }
 
 module.exports = evaluate;

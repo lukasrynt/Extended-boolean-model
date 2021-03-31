@@ -14,4 +14,9 @@ function OrNode(rVal, lVal) {
     this.operator = "||";
 }
 
-module.exports = {Node, AndNode, OrNode};
+function NotNode(value) {
+    this.value = value;
+    this.operator = "!";
+}
+
+module.exports = {Node, AndNode, OrNode, NotNode};
