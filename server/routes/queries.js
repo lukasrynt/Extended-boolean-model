@@ -30,8 +30,18 @@ router.post('/', (req, res) => {
     console.log("---parsed---")
     console.log(parsedRequest);
     console.log("------------")
-    let fileNums = evalQuery(parsedRequest, req.processed);
-    res.json(loadFiles(fileNums.slice(0, 50), req.collectionPath));
+    let queryRes = evalQuery(parsedRequest, req.processed);
+    let mappedToFiles = [];
+    queryRes.slice(0, 10);
+    queryRes.forEach(({file, weight}) => {
+            mappedToFiles.push({
+                file: file + '.txt',
+                content: fs.readFileSync(req.collectionPath + file + '.txt', 'utf-8'),
+                weight: +(weight * 100).toFixed(2)
+            });
+    })
+    console.log(mappedToFiles);
+    res.json(mappedToFiles);
 });
 
 module.exports = router;

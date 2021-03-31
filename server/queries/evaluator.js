@@ -9,7 +9,7 @@ function evaluate(processedQuery, invertedIndex) {
     console.log("---processed---")
     console.log(res)
     console.log("---------------")
-    return res.map(value => value.file);
+    return res;
 }
 
 function parse(processedQuery) {

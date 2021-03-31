@@ -62,7 +62,6 @@ const Home = () => {
         await setInput("");
         await setPage(0);
     };
-  
     return (
       <div className="App">
           <h1 className="project-name">Extended Boolean Model</h1>

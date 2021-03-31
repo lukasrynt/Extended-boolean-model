@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 
-const File = ( {id, text} ) => {
+const File = ( {id, text, weight} ) => {
     return (
         <div className="file">
             <p className="file-info">{id}</p>
@@ -10,6 +10,7 @@ const File = ( {id, text} ) => {
             <Link className="link" to={{pathname: '/about/' + id.slice(0, -4)}} >
                 <li className="link">Read more...</li>
             </Link>
+            <p className="file-relevance">Relevance: {weight}%</p>
         </div>
     );
 };
