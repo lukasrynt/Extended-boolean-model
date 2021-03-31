@@ -13,7 +13,8 @@ const Content = ( props ) => {
    
     return (
         <div className="content">
-            <p>{content[0].content}</p>
+            <p className="file-info">{content[0].file}</p>
+            <p className="file-content">{content[0].content}</p>
             <Link className="link" to={{pathname:'/'}}  >
                 <Button variant="contained" size="large" startIcon={<ReplayIcon/>}>Back
                     <li className="link"/>

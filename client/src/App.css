@@ -42,8 +42,8 @@
 }
 
 .file{
-  margin: 1rem 0rem;
-  padding: 2rem;
+  margin: 1rem 0;
+  padding: 1rem 2rem 1rem 2rem;
   border-radius: 10px;
   background: linear-gradient(
     to right bottom,
@@ -56,8 +56,17 @@
   transition: 0.3s;
 }
 
-.file p{
+.file-content{
   text-align: justify;
+  padding: 0 1rem;
+}
+
+.file-info{
+  text-align: left;
+  color: #305b60;
+  opacity: 0.5;
+  font-size: 12px;
+  margin-bottom: 1rem;
 }
 
 .circle1, .circle2, .circle3, .circle4, .circle5{
@@ -116,7 +125,6 @@
 }
 
 .link:hover{
-  /*color: #305b60;*/
   opacity: 1;
 }
 
@@ -144,11 +152,7 @@
   /*box-shadow: 6px 6px 20px rgba(122, 122, 122, 0.3);*/
   z-index: 2;
   backdrop-filter: blur(1rem);
-  padding: 5vh 2rem 0 2rem;
-}
-
-.content p{
-  text-align: justify;
+  padding: 2rem 2rem 0 2rem;
 }
 
 .content button{
