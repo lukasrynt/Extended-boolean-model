@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
     console.log("------------")
     let queryRes = evalQuery(parsedRequest, req.processed);
     let mappedToFiles = [];
-    queryRes.slice(0, 10);
+    queryRes = queryRes.slice(0, 50);
     queryRes.forEach(({file, weight}) => {
             mappedToFiles.push({
                 file: file + '.txt',
