@@ -3,6 +3,7 @@ const fs = require('fs');
 let maxFreq = {};
 let dfMap = {};
 let numberOfTerms = 0;
+let maxWeight = 0;
 
 // Map to format with word, frequency and filename
 function freqs(data, filename) {
@@ -45,10 +46,12 @@ function createInvertedIndex(termFreq, numberOfFiles) {
         if (!invertedIndex[word])
             invertedIndex[word] = [];
         let weight = tf(word, freq) * idf(word, numberOfFiles);
-        if (weight)
+        if (weight){
             invertedIndex[word].push({file: parseInt(filename), weight: weight});
+            if (weight > maxWeight) maxWeight = weight;
+        }
     });
-    return invertedIndex;
+    return normalizeWeights(invertedIndex);
 }
 
 // function createTDM(termFreq, numberOfFiles) {
@@ -75,12 +78,22 @@ function createInvertedIndex(termFreq, numberOfFiles) {
 //     return {matrix, wordToIdx};
 // }
 
-function tf(word, freq) {
+
+function normalizeWeights(invertedIndex){
+    if (maxWeight == 0) return invertedIndex;
+    Object.keys(invertedIndex).forEach((key) => {
+        invertedIndex[key].forEach((word) => {
+            word.weight = word.weight / maxWeight
+        })
+    })
+    return invertedIndex;
+}
+
+function tf(word, freq) { 
     return freq / maxFreq[word];
 }
 
 function idf(word, numberOfFiles) {
-
     return Math.log2(numberOfFiles/dfMap[word].size);
 }
 
