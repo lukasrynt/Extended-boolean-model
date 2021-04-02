@@ -191,3 +191,11 @@ footer {
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #305b60;
 }
+
+.alert{
+  z-index: 3;
+  padding-left: calc(100vw - 100%);
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+}

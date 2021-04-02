@@ -6,11 +6,14 @@ import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from '@material-ui/icons/Search';
+import Alert from '@material-ui/lab/Alert';
+import Fade from '@material-ui/core/Fade';
 
 const Home = () => {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [input, setInput] = useState("");
+    const [show, setShow] = useState(false);
 
     const pageHandler = (event, value) => {
       setPage(value - 1);
@@ -58,7 +61,14 @@ const Home = () => {
     const buttonHandler = async (e) => {
         e.preventDefault();
         const response = await fetch('http://localhost:5000/queries', requestOptions);
-        setData(await response.json())
+        const jsonResponse = await response.json();
+        console.log(jsonResponse);
+        if (jsonResponse.length)
+          setData(jsonResponse);
+        else{
+          console.log("smtg")
+          setShow((prev) => !prev)
+        }
         await setInput("");
         await setPage(0);
     };
@@ -79,6 +89,12 @@ const Home = () => {
                           }}
               />
           </form>
+          <Fade in={show}>
+            <Alert variant="filled" className="alert" 
+            onClick={() => {setShow((prev) => !prev)}} 
+            onClose={() => {}}
+            severity="warning">Expression was not found</Alert>
+          </Fade>
           <FileList pageNumber={page} data={data}/>
           <Pagination page={page + 1} className="paging" size="large" color="primary" onChange={pageHandler} count={Math.ceil(data.length / 5)}/>
         </div>
