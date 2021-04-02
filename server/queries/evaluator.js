@@ -1,5 +1,6 @@
 let invertedIdx;
 
+
 function evaluate(processedQuery, invertedIndex) {
     invertedIdx = invertedIndex;
     let res = parse(processedQuery).content;
@@ -98,12 +99,25 @@ function parseAnd(processedQuery) {
 function parseTerm(expression) {
     return {
         expression: expression,
-        content: invertedIdx[expression]
+        content: JSON.parse(JSON.stringify(invertedIdx[expression]))
     };
 }
 
-function parseNot(expression) {
-    let res = parse(expression.value);
+function fillRestFiles(result){
+    for (let i = 1; i < 3000; i++){
+        if (result.content[i] === undefined){
+            result.content.push({
+                file: i,
+                weight: 0
+            });
+        }
+    }
+    return result;
+}
+
+function parseNot(notExpression) {
+    let res = parse(notExpression.value);
+    res = fillRestFiles(res);
     res.content.forEach((item) => {
         item.weight = 1 - item.weight;
     });
