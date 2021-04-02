@@ -95,6 +95,7 @@ function parseAnd(processedQuery) {
         else if (left.content[l].file > right.content[r].file)
             r++;
     }
+
     return {
         expression: resExpression,
         content: resContent
@@ -111,7 +112,7 @@ function parseTerm(expression) {
 
 function fillRestFiles (result){
     for (let i = 1; i < 3000; i++){
-        if (result.content[i] === undefined){
+        if (!result.content.some((file) => { file.file === i })){
             result.content.push({
                 file: i,
                 weight: 0

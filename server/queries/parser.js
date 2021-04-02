@@ -116,21 +116,25 @@ function fillParentheses(tokens){
     {
         if (tokens[i] === "&&")
         {
-            if (tokens[i - 1] !== ")")
+            if (tokens[i - 1] !== ")" && tokens[i - 1] !== "!")
             {
                 tokens.splice(i - 1, 0, "(");
                 i++;
-            }
-            else{
+            }else if(tokens[i - 1] === "!" && tokens[i - 2] !== "("){
+                tokens.splice(i - 4, 0, ")");
+                i++;
+            }else{
                 leftBracket(tokens, i)
                 i++;
             }    
-            if (tokens[i + 1] !== "(")
+            if (tokens[i + 1] !== "(" && tokens[i + 1] !== "!")
             {
                 tokens.splice(i + 2, 0, ")");
                 i++;
-            }
-            else{
+            }else if(tokens[i + 1] === "!" && tokens[i + 2] !== "("){
+                tokens.splice(i + 4, 0, ")");
+                i = i + 2;
+            }else{
                 rightBracket(tokens, i);
                 i++;
             }    

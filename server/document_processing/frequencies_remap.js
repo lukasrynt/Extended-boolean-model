@@ -51,6 +51,11 @@ function createInvertedIndex(termFreq, numberOfFiles) {
             if (weight > maxWeight) maxWeight = weight;
         }
     });
+    Object.keys(invertedIndex).forEach((key) => {
+        invertedIndex[key].sort((a, b) => {
+            return a.file - b.file;
+        });
+    })
     return normalizeWeights(invertedIndex);
 }
 
