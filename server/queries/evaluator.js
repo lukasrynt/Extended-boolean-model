@@ -1,16 +1,21 @@
+const fs = require('fs');
+
 let invertedIdx;
+let collectionPath;
 
 
-function evaluate(processedQuery, invertedIndex) {
+function evaluate(processedQuery, invertedIndex, colPath) {
+    collectionPath = colPath;
     invertedIdx = invertedIndex;
-    let res = parse(processedQuery).content;
-    res.sort((a, b) => {
+    let res = parse(processedQuery);
+    if (!res) return 
+    res.content.sort((a, b) => {
         return b.weight - a.weight;
     });
     console.log("---processed---")
-    console.log(res)
+    console.log(res.content)
     console.log("---------------")
-    return res;
+    return res.content;
 }
 
 function parse(processedQuery) {
@@ -97,13 +102,14 @@ function parseAnd(processedQuery) {
 }
 
 function parseTerm(expression) {
+    if (!invertedIdx[expression]) return
     return {
         expression: expression,
         content: JSON.parse(JSON.stringify(invertedIdx[expression]))
     };
 }
 
-function fillRestFiles(result){
+function fillRestFiles (result){
     for (let i = 1; i < 3000; i++){
         if (result.content[i] === undefined){
             result.content.push({
@@ -112,12 +118,11 @@ function fillRestFiles(result){
             });
         }
     }
-    return result;
 }
 
 function parseNot(notExpression) {
     let res = parse(notExpression.value);
-    res = fillRestFiles(res);
+    fillRestFiles(res);
     res.content.forEach((item) => {
         item.weight = 1 - item.weight;
     });
