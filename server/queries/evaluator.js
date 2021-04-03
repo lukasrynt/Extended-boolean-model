@@ -39,6 +39,7 @@ function pushSingleContent(resContent, content) {
 function parseOr(processedQuery) {
     let left = parse(processedQuery.lVal)
     let right = parse(processedQuery.rVal)
+    if (!left || !right) return
     let resExpression = "(" + left.expression + " && " + right.expression + ")";
 
     // merge style counting
@@ -71,6 +72,7 @@ function parseOr(processedQuery) {
 function parseAnd(processedQuery) {
     let left = parse(processedQuery.lVal)
     let right = parse(processedQuery.rVal)
+    if (!left || !right) return
     let resExpression = "(" + left.expression + " && " + right.expression + ")";
     if (!left.content || !right.content)
         return {
@@ -111,7 +113,9 @@ function parseTerm(expression) {
 }
 
 function fillRestFiles (result){
-    for (let i = 1; i < 3000; i++){
+    const files = fs.readdirSync(collectionPath);
+    const length = files.length;
+    for (let i = 1; i < length; i++){
         if (!result.content.some((file) => { file.file === i })){
             result.content.push({
                 file: i,
@@ -123,6 +127,7 @@ function fillRestFiles (result){
 
 function parseNot(notExpression) {
     let res = parse(notExpression.value);
+    if (!res) return
     fillRestFiles(res);
     res.content.forEach((item) => {
         item.weight = 1 - item.weight;

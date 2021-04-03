@@ -30,9 +30,14 @@ router.post('/', (req, res) => {
     console.log("---parsed---")
     console.log(parsedRequest);
     console.log("------------")
+    if (!parsedRequest){
+        res.status(404);
+        res.json([]);
+        return;
+    }
     let queryRes = evalQuery(parsedRequest, req.processed, req.collectionPath);
     let mappedToFiles = [];
-    if (queryRes){
+    if (queryRes.length){
         queryRes = queryRes.slice(0, 50);
         queryRes.forEach(({file, weight}) => {
                 mappedToFiles.push({
@@ -41,8 +46,11 @@ router.post('/', (req, res) => {
                     weight: +(weight * 100).toFixed(2)
                 });
         })
-    }
-    console.log(mappedToFiles);
+        res.status(200);
+    }else
+        res.status(406)
+
+    //console.log(mappedToFiles);
     res.json(mappedToFiles);
 });
 

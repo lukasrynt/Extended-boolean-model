@@ -13,7 +13,8 @@ const Home = () => {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [input, setInput] = useState("");
-    const [show, setShow] = useState(false);
+    const [warning, setWarning] = useState(false);
+    const [error, setError] = useState(false);
 
     const pageHandler = (event, value) => {
       setPage(value - 1);
@@ -62,12 +63,16 @@ const Home = () => {
         e.preventDefault();
         const response = await fetch('http://localhost:5000/queries', requestOptions);
         const jsonResponse = await response.json();
-        console.log(jsonResponse);
-        if (jsonResponse.length)
+        if (response.status === 200){
           setData(jsonResponse);
-        else{
-          console.log("smtg")
-          setShow((prev) => !prev)
+        }
+        else if (response.status === 404){
+          setError((prev) => !prev)
+          setTimeout(() => { setError(false) }, 1500);
+        }
+        else if (response.status === 406){
+          setWarning((prev) => !prev)
+          setTimeout(() => { setWarning(false); }, 1500);
         }
         await setInput("");
         await setPage(0);
@@ -89,11 +94,17 @@ const Home = () => {
                           }}
               />
           </form>
-          <Fade in={show}>
+          <Fade in={warning}>
             <Alert variant="filled" className="alert" 
-            onClick={() => {setShow((prev) => !prev)}} 
+            onClick={() => {setWarning((prev) => !prev)}} 
             onClose={() => {}}
             severity="warning">Expression was not found</Alert>
+          </Fade>
+          <Fade in={error}>
+            <Alert variant="filled" className="alert" 
+            onClick={() => {setError((prev) => !prev)}} 
+            onClose={() => {}}
+            severity="error">Expression was type incorectly</Alert>
           </Fade>
           <FileList pageNumber={page} data={data}/>
           <Pagination page={page + 1} className="paging" size="large" color="primary" onChange={pageHandler} count={Math.ceil(data.length / 5)}/>

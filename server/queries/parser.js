@@ -132,7 +132,7 @@ function fillParentheses(tokens){
                 tokens.splice(i + 2, 0, ")");
                 i++;
             }else if(tokens[i + 1] === "!" && tokens[i + 2] !== "("){
-                tokens.splice(i + 4, 0, ")");
+                tokens.splice(i + 3, 0, ")");
                 i = i + 2;
             }else{
                 rightBracket(tokens, i);
@@ -153,7 +153,19 @@ function parseQuery(query) {
     let tokens = tokenize(query);
     fillParentheses(tokens);
     let idx = {value: 0};
-    return parseExpression(tokens, idx);
+    console.log(tokens)
+    let expression =  parseExpression(tokens, idx);
+    if(!checkParsedExpression(expression)) return;
+    return expression;
+}
+
+function checkParsedExpression(expression){
+    if (!expression) return false;
+    if (expression.hasOwnProperty("value")) return true;
+    let left = checkParsedExpression(expression.lVal);
+    let right = checkParsedExpression(expression.rVal);
+    if (!left || !right) return false;
+    return true;
 }
 
 function parseExpression(tokens, idx) {
@@ -196,6 +208,7 @@ function parseTerm(tokens, idx) {
     }
     else {
         idx.value++;
+        if (!tokens[idx.value - 1]) return 
         return new Node(tokens[idx.value - 1]);
     }
 }
