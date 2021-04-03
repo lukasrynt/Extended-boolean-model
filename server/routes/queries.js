@@ -26,29 +26,30 @@ router.get('/', (req, res) => {
 // handle queries
 router.post('/', (req, res) => {
     // Parse the query
-    let parsedRequest = parseRequest(req.body.query);
+    let parsedRequest;
+    try {
+        parsedRequest = parseRequest(req.body.query);
+    } catch (e) {
+        res.status(406).json({error: e.message})
+    }
     console.log("---parsed---")
     console.log(parsedRequest);
     console.log("------------")
-    if (!parsedRequest){
-        res.status(404);
-        res.json([]);
+    let queryRes = evalQuery(parsedRequest, req.processed, req.collectionPath);
+    if (!queryRes || !queryRes.length) {
+        res.status(404).json({error: "No results found"});
+        console.log("not found")
         return;
     }
-    let queryRes = evalQuery(parsedRequest, req.processed, req.collectionPath);
     let mappedToFiles = [];
-    if (queryRes.length){
-        queryRes = queryRes.slice(0, 50);
-        queryRes.forEach(({file, weight}) => {
-                mappedToFiles.push({
-                    file: file + '.txt',
-                    content: fs.readFileSync(req.collectionPath + file + '.txt', 'utf-8'),
-                    weight: +(weight * 100).toFixed(2)
-                });
-        })
-        res.status(200);
-    }else
-        res.status(406)
+    queryRes = queryRes.slice(0, 50);
+    queryRes.forEach(({file, weight}) => {
+            mappedToFiles.push({
+                file: file + '.txt',
+                content: fs.readFileSync(req.collectionPath + file + '.txt', 'utf-8'),
+                weight: +(weight * 100).toFixed(2)
+            });
+    })
 
     //console.log(mappedToFiles);
     res.json(mappedToFiles);

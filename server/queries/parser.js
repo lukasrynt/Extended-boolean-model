@@ -155,17 +155,9 @@ function parseQuery(query) {
     let idx = {value: 0};
     console.log(tokens)
     let expression =  parseExpression(tokens, idx);
-    if(!checkParsedExpression(expression)) return;
+    if (!expression)
+        throw new Error("Expression cannot be empty!")
     return expression;
-}
-
-function checkParsedExpression(expression){
-    if (!expression) return false;
-    if (expression.hasOwnProperty("value")) return true;
-    let left = checkParsedExpression(expression.lVal);
-    let right = checkParsedExpression(expression.rVal);
-    if (!left || !right) return false;
-    return true;
 }
 
 function parseExpression(tokens, idx) {
@@ -181,11 +173,15 @@ function parseExpression(tokens, idx) {
     if (tokens[idx.value] === "&&") {
         idx.value++;
         let rightExp = parseExpression(tokens, idx);
+        if (!rightExp || !leftExp)
+            throw new Error("Expression cannot be empty!")
         return new AndNode(rightExp, leftExp);
     }
     else if (tokens[idx.value] === "||") {
         idx.value++;
         let rightExp = parseExpression(tokens, idx);
+        if (!rightExp || !leftExp)
+            throw new Error("Expression cannot be empty!")
         return new OrNode(rightExp, leftExp);
     }else{
         return leftExp;
