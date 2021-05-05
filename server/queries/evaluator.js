@@ -18,6 +18,7 @@ function evaluate(processedQuery, invertedIndex, colPath){
     res.content.sort((a, b) => {
         return b.weight - a.weight;
     });
+    if (!res) return
     console.log("---processed---")
     console.log(res.content)
     console.log("---------------")
@@ -105,7 +106,6 @@ function parseAnd(processedQuery) {
             expression: resExpression,
             content: []
         }
-
     // merge style counting
     let resContent = [];
     let l = 0, r = 0;
@@ -137,10 +137,14 @@ function parseAnd(processedQuery) {
  */
 function parseTerm(expression) {
     if (!invertedIdx[expression]) return;
-    return {
+    let result = {
         expression: expression,
         content: JSON.parse(JSON.stringify(invertedIdx[expression]))
     };
+    result.content.sort((a, b) => {
+        return b.weight - a.weight;
+    });
+    return result;
 }
 
 /**
@@ -172,6 +176,11 @@ function parseNot(notExpression) {
     res.content.forEach((item) => {
         item.weight = 1 - item.weight;
     });
+
+    res.content.sort((a, b) => {
+        return b.weight - a.weight;
+    });
+
     return {
         expression: res.expression,
         content: res.content

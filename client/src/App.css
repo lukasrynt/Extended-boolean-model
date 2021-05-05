@@ -192,7 +192,17 @@ footer {
   -webkit-text-stroke-color: #305b60;
 }
 
+.MuiAlert-icon{
+  font-size: 1.9rem !important;; 
+}
+
+.MuiAlert-message{
+  font-size: 1.2rem;  
+}
+
 .alert{
+  font-size: 1.2rem; 
+  top: 45%;;
   z-index: 3;
   padding-left: calc(100vw - 100%);
   position: fixed;
