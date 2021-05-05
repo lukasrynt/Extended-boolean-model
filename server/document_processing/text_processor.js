@@ -8,7 +8,7 @@ let collectionPath;
 /**
  * Preprocess files into json stemmed files and return inverted index
  * @param files Files to be processed
- * @return Inverted index created from processed files
+ * @return {Map<string, Array<{file: string, weight: number}>>} Inverted index created from processed files
  */
 function preprocessFiles(files) {
     let termFreq = [];
@@ -26,7 +26,7 @@ function preprocessFiles(files) {
 /**
  * Stem and remove duplicates from loaded data
  * @param data Content of the file to be processed
- * @return Stemmed and tokenized data
+ * @return {Array<string>} Stemmed and tokenized data
  */
 function trim(data) {
     const withoutStops = sw.removeStopwords(data.split(' '));
@@ -36,7 +36,7 @@ function trim(data) {
 /**
  * Processes the files in collection path
  * @param cltPath Collection path
- * @return Inverted index either loaded from previous processing or created from processed files
+ * @return {Map<string, Array<{file: string, weight: number}>>} Inverted index either loaded from previous processing or created from processed files
  */
 function processDocuments(cltPath) {
     collectionPath = cltPath;

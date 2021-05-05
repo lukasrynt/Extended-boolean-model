@@ -7,7 +7,7 @@ let maxWeight = 0;
  * Create term vector with terms, frequencies and filenames as individual entries
  * @param data Data in form of vector with terms
  * @param filename Name of the file, from which the data originates
- * @return Created term vector
+ * @return {Array<{term: string, freq: number, filename: string}>} Created term vector
  */
 function frequencies(data, filename) {
     // Add frequencies
@@ -46,7 +46,7 @@ function processTF_IDF(termFreq) {
  * Create inverted index
  * @param termFreq Terms mapped to their frequencies and filename they are in
  * @param numberOfFiles Number of all files in the collection
- * @return Inverted index
+ * @return {Map<string, Array<{file: string, weight: number}>>} Inverted index
  */
 function createInvertedIndex(termFreq, numberOfFiles) {
     if (Object.getOwnPropertyNames(dfMap).length === 0)
@@ -74,7 +74,7 @@ function createInvertedIndex(termFreq, numberOfFiles) {
 /**
  * Normalize the weights of terms to fit into (0,1) interval
  * @param invertedIndex The inverted index we processed earlier
- * @return normalized inverted index
+ * @return {Map<string, Array<{file: string, weight: number}>>} normalized inverted index
  */
 function normalizeWeights(invertedIndex){
     if (maxWeight === 0) return invertedIndex;
@@ -90,7 +90,7 @@ function normalizeWeights(invertedIndex){
  * Calculate the frequency of term in document
  * @param term Term which frequency we want to get
  * @param freq Frequency of the term
- * @return tf of term
+ * @return {number} tf of term
  */
 function tf(term, freq) {
     return freq / maxFreq[term];
@@ -100,7 +100,7 @@ function tf(term, freq) {
  * Calculate inverse document frequency
  * @param term Term which frequency we want to get
  * @param numberOfFiles Number of all files in the collection
- * @return idf of the term
+ * @return {number} idf of the term
  */
 function idf(term, numberOfFiles) {
     return Math.log2(numberOfFiles/dfMap[term].size);

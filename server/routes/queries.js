@@ -11,7 +11,7 @@ router.use(cors());
  * Load the corresponding files content and add weight to them
  * @param queryRes Result of previous query parsing
  * @param collectionPath Path to collection with data
- * @return Vector containing filename, its content and weight to the given query
+ * @return {{file: string, content: string, weight: float}} array of filename, its content and weight to the given query
  */
 function loadFiles(queryRes, collectionPath) {
     let res = [];

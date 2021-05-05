@@ -1,7 +1,11 @@
 const {Node, AndNode, OrNode, NotNode} = require('./Node');
 const natural = require('natural')
 
-
+/**
+ * When reached the point where the word has ended, insert the token into result
+ * @param res Result with all tokens
+ * @param token Token to be pushed to result
+ */
 function insertFullToken(res, token) {
     token = token.trim();
     if (token === "and")
@@ -17,7 +21,7 @@ function insertFullToken(res, token) {
 /**
  * Takes query and separates into tokens (words, &&, ||, '(', ')')
  * @param query query to be tokenized
- * @return array of tokens
+ * @return {Array<string>} tokens
  * @inspired-by https://www.meziantou.net/creating-a-parser-for-boolean-expressions.htm
  */
 function tokenize(query) {
@@ -111,6 +115,10 @@ function rightBracket(tokens, i){
     }
 }
 
+/**
+ * Fill the parentheses in order to respect and operator priority
+ * @param {Array<string>} tokens Tokens to be changed
+ */
 function fillParentheses(tokens){
     for (let i = 1; i < tokens.length - 1; i++)
     {
@@ -146,7 +154,7 @@ function fillParentheses(tokens){
 /**
  * Takes query and processes it into AST of terms
  * @param query query to be parsed
- * @return parsed expression
+ * @return {Node | AndNode | NotNode | OrNode} parsed expression
  */
 function parseQuery(query) {
     // tokenize entry string
@@ -154,12 +162,18 @@ function parseQuery(query) {
     fillParentheses(tokens);
     let idx = {value: 0};
     console.log(tokens)
-    let expression =  parseExpression(tokens, idx);
+    let expression = parseExpression(tokens, idx);
     if (!expression)
         throw new Error("Expression cannot be empty!")
     return expression;
 }
 
+/**
+ * Parses the expression into AST of terms recursively
+ * @param tokens Tokens we want to parse
+ * @param idx Index we move on the tokens array
+ * @return {Node | AndNode | NotNode | OrNode} AST of boolean nodes
+ */
 function parseExpression(tokens, idx) {
     let leftExp = parseTerm(tokens, idx);
     if (idx.value >= tokens.length)
@@ -188,6 +202,12 @@ function parseExpression(tokens, idx) {
     }
 }
 
+/**
+ * Parse the individual term
+ * @param tokens Tokens we want to parse
+ * @param idx Index we move on the tokens array
+ * @return {Node | AndNode | NotNode | OrNode | undefined} AST subtree of boolean nodes
+ */
 function parseTerm(tokens, idx) {
     if (tokens[idx.value] === '!') {
         idx.value++;
