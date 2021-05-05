@@ -11,7 +11,7 @@ router.use(cors());
  * Load the corresponding files content and add weight to them
  * @param {Array<{file: string, weight: number}>} queryRes Result of previous query parsing
  * @param {string} collectionPath Path to collection with data
- * @return {{file: string, content: string, weight: float}} array of filename, its content and weight to the given query
+ * @return {Array<{file: string, content: string, weight: float}>} array of filename, its content and weight to the given query
  */
 function loadFiles(queryRes, collectionPath) {
     let res = [];
