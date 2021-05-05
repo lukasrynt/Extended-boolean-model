@@ -3,8 +3,8 @@ const natural = require('natural')
 
 /**
  * When reached the point where the word has ended, insert the token into result
- * @param res Result with all tokens
- * @param token Token to be pushed to result
+ * @param {Array<string>} res Result with all tokens
+ * @param {string} token Token to be pushed to result
  */
 function insertFullToken(res, token) {
     token = token.trim();
@@ -15,12 +15,12 @@ function insertFullToken(res, token) {
     else if (token === "not")
         res.push("!");
     else
-        res.push(natural.PorterStemmer.tokenizeAndStem(token));
+        res.push(natural.PorterStemmer.tokenizeAndStem(token)[0]);
 }
 
 /**
  * Takes query and separates into tokens (words, &&, ||, '(', ')')
- * @param query query to be tokenized
+ * @param {string} query query to be tokenized
  * @return {Array<string>} tokens
  * @inspired-by https://www.meziantou.net/creating-a-parser-for-boolean-expressions.htm
  */
@@ -153,7 +153,7 @@ function fillParentheses(tokens){
 
 /**
  * Takes query and processes it into AST of terms
- * @param query query to be parsed
+ * @param {string} query query to be parsed
  * @return {Node | AndNode | NotNode | OrNode} parsed expression
  */
 function parseQuery(query) {
@@ -170,8 +170,8 @@ function parseQuery(query) {
 
 /**
  * Parses the expression into AST of terms recursively
- * @param tokens Tokens we want to parse
- * @param idx Index we move on the tokens array
+ * @param {Array<string>} tokens Tokens we want to parse
+ * @param {{value: number}} idx Index we move on the tokens array
  * @return {Node | AndNode | NotNode | OrNode} AST of boolean nodes
  */
 function parseExpression(tokens, idx) {
@@ -204,8 +204,8 @@ function parseExpression(tokens, idx) {
 
 /**
  * Parse the individual term
- * @param tokens Tokens we want to parse
- * @param idx Index we move on the tokens array
+ * @param {Array<string>} tokens Tokens we want to parse
+ * @param {{value: number}} idx Index we move on the tokens array
  * @return {Node | AndNode | NotNode | OrNode | undefined} AST subtree of boolean nodes
  */
 function parseTerm(tokens, idx) {
