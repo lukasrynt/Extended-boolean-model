@@ -31,14 +31,18 @@ router.post('/', (req, res) => {
         parsedRequest = parseRequest(req.body.query);
     } catch (e) {
         res.status(406).json({error: e.message})
+        return;
     }
     console.log("---parsed---")
     console.log(parsedRequest);
     console.log("------------")
+    if (!parsedRequest) {
+        res.status(406).json({error: "No content"});
+        return;
+    }
     let queryRes = evalQuery(parsedRequest, req.processed, req.collectionPath);
     if (!queryRes || !queryRes.length) {
         res.status(404).json({error: "No results found"});
-        console.log("not found")
         return;
     }
     let mappedToFiles = [];
@@ -50,7 +54,6 @@ router.post('/', (req, res) => {
                 weight: +(weight * 100).toFixed(2)
             });
     })
-
     //console.log(mappedToFiles);
     res.json(mappedToFiles);
 });

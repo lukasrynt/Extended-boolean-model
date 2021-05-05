@@ -66,11 +66,11 @@ const Home = () => {
         if (response.status === 200){
           setData(jsonResponse);
         }
-        else if (response.status === 404){
+        else if (response.status === 406){
           setError((prev) => !prev)
           setTimeout(() => { setError(false) }, 1500);
         }
-        else if (response.status === 406){
+        else if (response.status === 404){
           setWarning((prev) => !prev)
           setTimeout(() => { setWarning(false); }, 1500);
         }
@@ -104,7 +104,7 @@ const Home = () => {
             <Alert variant="filled" className="alert" 
             onClick={() => {setError((prev) => !prev)}} 
             onClose={() => {}}
-            severity="error">Expression was type incorectly</Alert>
+            severity="error">Expression is empty or typed incorrectly</Alert>
           </Fade>
           <FileList pageNumber={page} data={data}/>
           <Pagination page={page + 1} className="paging" size="large" color="primary" onChange={pageHandler} count={Math.ceil(data.length / 5)}/>
