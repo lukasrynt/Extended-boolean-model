@@ -145,15 +145,15 @@ function parseTerm(expression) {
 
 /**
  * Fill in the rest of the files in case of NOT node
- * @param {{expression: string, content: Array<{file: number, weight: number}>}} result Result we want to fill with more relevant files
+ * @param {{expression: string, content: Array<{file: string, weight: number}>}} result Result we want to fill with more relevant files
  */
 function fillRestFiles (result) {
     const files = fs.readdirSync(collectionPath);
     const length = files.length;
     for (let i = 1; i < length; i++){
-        if (!result.content.some((file) => { file.file === i })){
+        if (!result.content.some((file) => { return file.file === i.toString() })){
             result.content.push({
-                file: i,
+                file: i.toString(),
                 weight: 0
             });
         }
