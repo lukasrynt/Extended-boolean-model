@@ -5,8 +5,8 @@ let maxWeight = 0;
 
 /**
  * Create term vector with terms, frequencies and filenames as individual entries
- * @param data Data in form of vector with terms
- * @param filename Name of the file, from which the data originates
+ * @param {Array<string>} data Data in form of vector with terms
+ * @param {string} filename Name of the file, from which the data originates
  * @return {Array<{term: string, freq: number, filename: string}>} Created term vector
  */
 function frequencies(data, filename) {
@@ -28,7 +28,7 @@ function frequencies(data, filename) {
 
 /**
  * Calculates tf-idf of all terms
- * @param termFreq Terms mapped to their frequencies and filename they are in
+ * @param {Array<{term: string, freq: number, filename: string}>} termFreq Terms mapped to their frequencies and filename they are in
  */
 function processTF_IDF(termFreq) {
     termFreq.forEach(({term, freq, filename}) => {
@@ -44,8 +44,8 @@ function processTF_IDF(termFreq) {
 
 /**
  * Create inverted index
- * @param termFreq Terms mapped to their frequencies and filename they are in
- * @param numberOfFiles Number of all files in the collection
+ * @param {Array<{term: string, freq: number, filename: string}>} termFreq Terms mapped to their frequencies and filename they are in
+ * @param {number} numberOfFiles Number of all files in the collection
  * @return {Map<string, Array<{file: string, weight: number}>>} Inverted index
  */
 function createInvertedIndex(termFreq, numberOfFiles) {
@@ -53,7 +53,7 @@ function createInvertedIndex(termFreq, numberOfFiles) {
         processTF_IDF(termFreq);
 
     // create inverted index
-    let invertedIndex = {};
+    let invertedIndex = new Map;
     termFreq.forEach(({term, freq, filename}) => {
         if (!invertedIndex[term])
             invertedIndex[term] = [];
@@ -73,7 +73,7 @@ function createInvertedIndex(termFreq, numberOfFiles) {
 
 /**
  * Normalize the weights of terms to fit into (0,1) interval
- * @param invertedIndex The inverted index we processed earlier
+ * @param {Map<string, Array<{file: string, weight: number}>>} invertedIndex The inverted index we processed earlier
  * @return {Map<string, Array<{file: string, weight: number}>>} normalized inverted index
  */
 function normalizeWeights(invertedIndex){
@@ -88,8 +88,8 @@ function normalizeWeights(invertedIndex){
 
 /**
  * Calculate the frequency of term in document
- * @param term Term which frequency we want to get
- * @param freq Frequency of the term
+ * @param {string} term Term which frequency we want to get
+ * @param {number} freq Frequency of the term
  * @return {number} tf of term
  */
 function tf(term, freq) {
@@ -98,8 +98,8 @@ function tf(term, freq) {
 
 /**
  * Calculate inverse document frequency
- * @param term Term which frequency we want to get
- * @param numberOfFiles Number of all files in the collection
+ * @param {string} term Term which frequency we want to get
+ * @param {number} numberOfFiles Number of all files in the collection
  * @return {number} idf of the term
  */
 function idf(term, numberOfFiles) {

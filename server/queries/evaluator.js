@@ -5,9 +5,9 @@ let collectionPath;
 
 /**
  * Evaluate the relevance of terms in documents
- * @param processedQuery Query processed into AST
- * @param invertedIndex Inverted index containing the terms and frequencies
- * @param colPath Path to collection
+ * @param {Node | AndNode | OrNode | NotNode}processedQuery Query processed into AST
+ * @param {Map<string, Array<{file: string, weight: number}>>} invertedIndex Inverted index containing the terms and frequencies
+ * @param {string} colPath Path to collection
  * @return {Array<{file: string, weight: number}> | undefined} Evaluated AST converted to weights and filenames
  */
 function evaluate(processedQuery, invertedIndex, colPath){
@@ -26,7 +26,7 @@ function evaluate(processedQuery, invertedIndex, colPath){
 
 /**
  * Recursively evaluate all subnodes of the original AST
- * @param processedQuery Query processed into AST
+ * @param {Node | AndNode | OrNode | NotNode} processedQuery Query processed into AST
  * @return {{expression: string, content: Array<{file: string, weight: number}>} | undefined} Evaluated AST converted to weights and filenames
  */
 function parse(processedQuery) {
@@ -42,8 +42,8 @@ function parse(processedQuery) {
 
 /**
  * Pushes single element to result
- * @param resContent Result content
- * @param content Content we want to push
+ * @param {Array<{file: string, weight: number}>} resContent Result content
+ * @param {{file: string, weight: number}} content Content we want to push
  */
 function pushSingleContent(resContent, content) {
     resContent.push({
@@ -54,7 +54,7 @@ function pushSingleContent(resContent, content) {
 
 /**
  * Parses OR node in AST
- * @param processedQuery AST subtree
+ * @param {OrNode} processedQuery AST subtree
  * @return {{expression: string, content: Array<{file: string, weight: number}>} | undefined} Processed OR node
  */
 function parseOr(processedQuery) {
@@ -92,7 +92,7 @@ function parseOr(processedQuery) {
 
 /**
  * Parses AND node in AST
- * @param processedQuery AST subtree
+ * @param {AndNode} processedQuery AST subtree
  * @return {{expression: string, content: Array<{file: string, weight: number}>} | undefined} Processed AND node
  */
 function parseAnd(processedQuery) {
@@ -132,7 +132,7 @@ function parseAnd(processedQuery) {
 
 /**
  * Evaluate a single term - the leaf of AST
- * @param expression Expression to be evaluated
+ * @param {string} expression Expression to be evaluated
  * @return {{expression: string, content: Array<{file: string, weight: number}>} | undefined} Result of the evaluation
  */
 function parseTerm(expression) {
@@ -145,7 +145,7 @@ function parseTerm(expression) {
 
 /**
  * Fill in the rest of the files in case of NOT node
- * @param result Result we want to fill with more relevant files
+ * @param {{expression: string, content: Array<{file: string, weight: number}>}} result Result we want to fill with more relevant files
  */
 function fillRestFiles (result) {
     const files = fs.readdirSync(collectionPath);
@@ -162,7 +162,7 @@ function fillRestFiles (result) {
 
 /**
  * Parse the NOT node
- * @param notExpression expression to be parsed
+ * @param {NotNode} notExpression expression to be parsed
  * @return {{expression: string, content: Array<{file: string, weight: number}>} | undefined} Result of evaluation
  */
 function parseNot(notExpression) {

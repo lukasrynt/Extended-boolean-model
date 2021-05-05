@@ -7,7 +7,7 @@ let collectionPath;
 
 /**
  * Preprocess files into json stemmed files and return inverted index
- * @param files Files to be processed
+ * @param {Array<string>} files Files to be processed
  * @return {Map<string, Array<{file: string, weight: number}>>} Inverted index created from processed files
  */
 function preprocessFiles(files) {
@@ -25,7 +25,7 @@ function preprocessFiles(files) {
 
 /**
  * Stem and remove duplicates from loaded data
- * @param data Content of the file to be processed
+ * @param {string} data Content of the file to be processed
  * @return {Array<string>} Stemmed and tokenized data
  */
 function trim(data) {
@@ -35,7 +35,7 @@ function trim(data) {
 
 /**
  * Processes the files in collection path
- * @param cltPath Collection path
+ * @param {string} cltPath Collection path
  * @return {Map<string, Array<{file: string, weight: number}>>} Inverted index either loaded from previous processing or created from processed files
  */
 function processDocuments(cltPath) {
