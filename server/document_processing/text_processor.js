@@ -1,33 +1,43 @@
 const natural = require('natural');
 const fs = require('fs');
 const sw = require('stopword');
-const {freqs, createInvertedIndex} = require('./frequencies_remap');
+const {frequencies, createInvertedIndex} = require('./frequencies_remap');
 
 let collectionPath;
 
-// Preprocess files into json stemmed files and return term vectors
+/**
+ * Preprocess files into json stemmed files and return inverted index
+ * @param files Files to be processed
+ * @return Inverted index created from processed files
+ */
 function preprocessFiles(files) {
     let termFreq = [];
     let numberOfFiles = 0;
     files.forEach((filename) => {
         let trimmed = trim(fs.readFileSync(collectionPath + filename, 'utf-8'));
-        termFreq = [...termFreq, ...(freqs(trimmed, filename))];
+        termFreq = [...termFreq, ...(frequencies(trimmed, filename))];
         numberOfFiles++;
     });
-    // let TDM = createTDM(termFreq, numberOfFiles);
     let invertedIndex = createInvertedIndex(termFreq, numberOfFiles);
-    // fs.writeFileSync(`data/term_by_doc_matrix.json`, JSON.stringify(TDM, null, 2));
     fs.writeFileSync(`data/inverted_index.json`, JSON.stringify(invertedIndex, null, 2));
     return invertedIndex;
 }
 
-// Stem and remove duplicities from loaded data
+/**
+ * Stem and remove duplicates from loaded data
+ * @param data Content of the file to be processed
+ * @return Stemmed and tokenized data
+ */
 function trim(data) {
     const withoutStops = sw.removeStopwords(data.split(' '));
     return natural.PorterStemmer.tokenizeAndStem(withoutStops.join(' '));
 }
 
-// Load the term vectors depending on whether we have preprocessed json docs or not
+/**
+ * Processes the files in collection path
+ * @param cltPath Collection path
+ * @return Inverted index either loaded from previous processing or created from processed files
+ */
 function processDocuments(cltPath) {
     collectionPath = cltPath;
     const path = 'data/inverted_index.json';

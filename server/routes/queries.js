@@ -7,14 +7,21 @@ const evalQuery = require('../queries/evaluator');
 
 router.use(cors());
 
-function loadFiles(fileNums, collectionPath) {
+/**
+ * Load the corresponding files content and add weight to them
+ * @param queryRes Result of previous query parsing
+ * @param collectionPath Path to collection with data
+ * @return Vector containing filename, its content and weight to the given query
+ */
+function loadFiles(queryRes, collectionPath) {
     let res = [];
-    fileNums.forEach((fileNum) => {
+    queryRes.forEach(({file, weight}) => {
         res.push({
-            file: fileNum + '.txt',
-            content: fs.readFileSync(collectionPath + fileNum + '.txt', 'utf-8')
+            file: file + '.txt',
+            content: fs.readFileSync(collectionPath + file + '.txt', 'utf-8'),
+            weight: +(weight * 100).toFixed(2)
         });
-    });
+    })
     return res;
 }
 
@@ -45,15 +52,8 @@ router.post('/', (req, res) => {
         res.status(404).json({error: "No results found"});
         return;
     }
-    let mappedToFiles = [];
     queryRes = queryRes.slice(0, 50);
-    queryRes.forEach(({file, weight}) => {
-            mappedToFiles.push({
-                file: file + '.txt',
-                content: fs.readFileSync(req.collectionPath + file + '.txt', 'utf-8'),
-                weight: +(weight * 100).toFixed(2)
-            });
-    })
+    let mappedToFiles = loadFiles(queryRes, req.collectionPath);
     //console.log(mappedToFiles);
     res.json(mappedToFiles);
 });

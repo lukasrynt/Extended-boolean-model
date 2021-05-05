@@ -1,53 +1,65 @@
-const fs = require('fs');
-
 let maxFreq = {};
 let dfMap = {};
 let numberOfTerms = 0;
 let maxWeight = 0;
 
-// Map to format with word, frequency and filename
-function freqs(data, filename) {
-
+/**
+ * Create term vector with terms, frequencies and filenames as individual entries
+ * @param data Data in form of vector with terms
+ * @param filename Name of the file, from which the data originates
+ * @return Created term vector
+ */
+function frequencies(data, filename) {
     // Add frequencies
     let freqMap = {}
-    data.forEach((word) => {
-        if (!freqMap[word])
-            freqMap[word] = 0;
-        freqMap[word]++;
+    data.forEach((term) => {
+        if (!freqMap[term])
+            freqMap[term] = 0;
+        freqMap[term]++;
     });
 
     // Map to frequencies and document
     let termVec = [];
     for (let [key, value] of Object.entries(freqMap)) {
-        termVec.push({word: key, freq: value, filename: filename.replace('.txt', '')})
+        termVec.push({term: key, freq: value, filename: filename.replace('.txt', '')})
     }
     return termVec;
 }
 
+/**
+ * Calculates tf-idf of all terms
+ * @param termFreq Terms mapped to their frequencies and filename they are in
+ */
 function processTF_IDF(termFreq) {
-    termFreq.forEach(({word, freq, filename}) => {
-        if (!maxFreq[word] || maxFreq[word] < freq)
-            maxFreq[word] = freq;
-        if (!dfMap[word]) {
-            dfMap[word] = new Set();
+    termFreq.forEach(({term, freq, filename}) => {
+        if (!maxFreq[term] || maxFreq[term] < freq)
+            maxFreq[term] = freq;
+        if (!dfMap[term]) {
+            dfMap[term] = new Set();
             numberOfTerms++;
         }
-        dfMap[word].add(filename);
+        dfMap[term].add(filename);
     });
 }
 
+/**
+ * Create inverted index
+ * @param termFreq Terms mapped to their frequencies and filename they are in
+ * @param numberOfFiles Number of all files in the collection
+ * @return Inverted index
+ */
 function createInvertedIndex(termFreq, numberOfFiles) {
     if (Object.getOwnPropertyNames(dfMap).length === 0)
         processTF_IDF(termFreq);
 
     // create inverted index
     let invertedIndex = {};
-    termFreq.forEach(({word, freq, filename}) => {
-        if (!invertedIndex[word])
-            invertedIndex[word] = [];
-        let weight = tf(word, freq) * idf(word, numberOfFiles);
+    termFreq.forEach(({term, freq, filename}) => {
+        if (!invertedIndex[term])
+            invertedIndex[term] = [];
+        let weight = tf(term, freq) * idf(term, numberOfFiles);
         if (weight){
-            invertedIndex[word].push({file: parseInt(filename), weight: weight});
+            invertedIndex[term].push({file: parseInt(filename), weight: weight});
             if (weight > maxWeight) maxWeight = weight;
         }
     });
@@ -59,47 +71,39 @@ function createInvertedIndex(termFreq, numberOfFiles) {
     return normalizeWeights(invertedIndex);
 }
 
-// function createTDM(termFreq, numberOfFiles) {
-//     if (Object.getOwnPropertyNames(dfMap).length === 0)
-//         processTF_IDF(termFreq);
-//
-//     // create term by document sparse matrix in form of 2D array a mapper from word to index
-//     let matrix = new Array(numberOfFiles);
-//     for (let i = 0; i < numberOfFiles; ++i)
-//         matrix[i] = new Array(10).fill(0);
-//     let wordToIdx = {};
-//     let idx = 0;
-//     termFreq.forEach(({word, freq, filename}) => {
-//         let fileIdx = parseInt(filename) - 1;
-//         if (!wordToIdx[word]) {
-//             wordToIdx[word] = idx;
-//             while (matrix[fileIdx].length < idx)
-//                 matrix[fileIdx].push(0);
-//         }
-//         matrix[fileIdx][wordToIdx[word]] = tf(word, freq) * idf(word, numberOfFiles);
-//         idx++;
-//     });
-//
-//     return {matrix, wordToIdx};
-// }
-
-
+/**
+ * Normalize the weights of terms to fit into (0,1) interval
+ * @param invertedIndex The inverted index we processed earlier
+ * @return normalized inverted index
+ */
 function normalizeWeights(invertedIndex){
-    if (maxWeight == 0) return invertedIndex;
+    if (maxWeight === 0) return invertedIndex;
     Object.keys(invertedIndex).forEach((key) => {
-        invertedIndex[key].forEach((word) => {
-            word.weight = word.weight / maxWeight
+        invertedIndex[key].forEach((term) => {
+            term.weight = term.weight / maxWeight
         })
     })
     return invertedIndex;
 }
 
-function tf(word, freq) { 
-    return freq / maxFreq[word];
+/**
+ * Calculate the frequency of term in document
+ * @param term Term which frequency we want to get
+ * @param freq Frequency of the term
+ * @return tf of term
+ */
+function tf(term, freq) {
+    return freq / maxFreq[term];
 }
 
-function idf(word, numberOfFiles) {
-    return Math.log2(numberOfFiles/dfMap[word].size);
+/**
+ * Calculate inverse document frequency
+ * @param term Term which frequency we want to get
+ * @param numberOfFiles Number of all files in the collection
+ * @return idf of the term
+ */
+function idf(term, numberOfFiles) {
+    return Math.log2(numberOfFiles/dfMap[term].size);
 }
 
-module.exports = {freqs, createInvertedIndex};
+module.exports = {frequencies, createInvertedIndex};
