@@ -120,13 +120,16 @@ function rightBracket(tokens, i){
  * @param {Array<string>} tokens Tokens to be changed
  */
 function fillParentheses(tokens){
-    for (let i = 1; i < tokens.length - 1; i++)
+    for (let i = 0; i < tokens.length - 1; i++)
     {
         if (tokens[i] === "&&")
         {
             if (tokens[i - 1] !== ")" && tokens[i - 1] !== "!")
             {
-                tokens.splice(i - 1, 0, "(");
+                if (tokens[i - 2] === "!")
+                    tokens.splice(i - 2, 0, "(");
+                else    
+                    tokens.splice(i - 1, 0, "(");
                 i++;
             }else if(tokens[i - 1] === "!" && tokens[i - 2] !== "("){
                 tokens.splice(i - 4, 0, ")");
@@ -141,11 +144,17 @@ function fillParentheses(tokens){
                 i++;
             }else if(tokens[i + 1] === "!" && tokens[i + 2] !== "("){
                 tokens.splice(i + 3, 0, ")");
-                i = i + 2;
             }else{
                 rightBracket(tokens, i);
                 i++;
             }    
+        }else if (tokens[i] === "!" && tokens[i] !== "("){
+            if (i === 0)
+                tokens.splice(0, 0, "(")
+            else
+                tokens.splice(i, 0, "(");
+            tokens.splice(i + 3, 0, ")");
+            i++;
         }
         
     }
