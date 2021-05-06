@@ -83,8 +83,14 @@ function tokenize(query) {
     return res;
 }
 
+/**
+ * Fill the left missing bracket
+ * @param {Array<string>} tokens Tokens in which we want to fill left bracket
+ * @param {int} i index from which to start
+ */
 function leftBracket(tokens, i){
     let parenthesesCnt = 0;
+    // from current pos go index by index to the left
     for (let j = i - 1; j >= 0; j--)
     {
         if (tokens[j] === ")")
@@ -99,8 +105,14 @@ function leftBracket(tokens, i){
     }
 }
 
+/**
+ * Fill the right missing bracket
+ * @param {Array<string>} tokens Tokens in which we want to fill right bracket
+ * @param {int} i index from which to start
+ */
 function rightBracket(tokens, i){
     let parenthesesCnt = 0;
+    // from current pos go index by index to the right
     for (let j = i + 1; j < tokens.length; j++)
     {
         if (tokens[j] === "(")
@@ -116,7 +128,7 @@ function rightBracket(tokens, i){
 }
 
 /**
- * Fill the parentheses in order to respect and operator priority
+ * Fill the parentheses in order to respect and operator priority also wrap not operator with brackets
  * @param {Array<string>} tokens Tokens to be changed
  */
 function fillParentheses(tokens){
