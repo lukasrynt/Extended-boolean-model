@@ -4,7 +4,8 @@
   "description": "Project for BI-VWM",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js --ignore ./data/*"
+    "start": "nodemon app.js --ignore ./data/*",
+    "install": "npm install express --save nodemon"
   },
   "repository": {
     "type": "git",
