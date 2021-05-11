@@ -56,7 +56,7 @@ function createInvertedIndex(termFreq, numberOfFiles) {
     let invertedIndex = {};
     termFreq.forEach(({term, freq, filename}) => {
         if (!invertedIndex[term])
-            invertedIndex[term] = []
+            invertedIndex[term]= new Array();
         let weight = tf(term, freq) * idf(term, numberOfFiles);
         if (weight){
             invertedIndex[term].push({file: parseInt(filename), weight: weight});
@@ -72,6 +72,26 @@ function createInvertedIndex(termFreq, numberOfFiles) {
 }
 
 /**
+ * Create matrix term by doc
+ * @param {Array<{term: string, freq: number, filename: string}>} termFreq Terms mapped to their frequencies and filename they are in
+ * @param {number} numberOfFiles Number of all files in the collection
+ * @return {Map<string, Array<{file: string, weight: number}>>} term by doc matrix
+ */
+function createTermByDocMatrix(termFreq, numberOfFiles) {
+    if (Object.getOwnPropertyNames(dfMap).length === 0){
+        processTF_IDF(termFreq);
+    }
+    // create term by document sparse matrix in form of dictionary with two keys
+    let matrix = {};
+    termFreq.forEach(({term, freq, filename}) => {
+        let weight = tf(term, freq) * idf(term, numberOfFiles);
+        matrix[[term, filename]] = weight;
+        if (weight > maxWeight) maxWeight = weight;
+    });
+    return normalizeWeightsDict(matrix);
+}
+
+/**
  * Normalize the weights of terms to fit into (0,1) interval
  * @param {Map<string, Array<{file: string, weight: number}>>} invertedIndex The inverted index we processed earlier
  * @return {Map<string, Array<{file: string, weight: number}>>} normalized inverted index
@@ -84,6 +104,19 @@ function normalizeWeights(invertedIndex){
         })
     })
     return invertedIndex;
+}
+
+/**
+ * Normalize the weights of terms to fit into (0,1) interval
+ * @param {Map<string, Array<{file: string, weight: number}>>} matrix The matrix term by doc we processed earlier
+ * @return {Map<string, Array<{file: string, weight: number}>>} normalized matrix term by doc
+ */
+function normalizeWeightsDict(matrix){
+    if (maxWeight === 0) return matrix;
+    Object.keys(matrix).forEach((key) => {
+        matrix[[key]] = matrix[[key]] / maxWeight
+    })
+    return matrix;
 }
 
 /**
@@ -106,4 +139,4 @@ function idf(term, numberOfFiles) {
     return Math.log2(numberOfFiles/dfMap[term].size);
 }
 
-module.exports = {frequencies, createInvertedIndex};
+module.exports = {frequencies, createInvertedIndex, createTermByDocMatrix};

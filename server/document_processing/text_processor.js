@@ -1,7 +1,7 @@
 const natural = require('natural');
 const fs = require('fs');
 const sw = require('stopword');
-const {frequencies, createInvertedIndex} = require('./frequencies_remap');
+const {frequencies, createInvertedIndex, createTermByDocMatrix} = require('./frequencies_remap');
 
 let collectionPath;
 
@@ -40,7 +40,7 @@ function trim(data) {
  */
 function processDocuments(cltPath) {
     collectionPath = cltPath;
-    const path = 'data/inverted_index.json';
+    const path = 'data/term_by_doc.json';
     const orig = fs.readdirSync(collectionPath);
     if (fs.existsSync(path))
         return JSON.parse(fs.readFileSync(path, 'utf-8'));
