@@ -53,13 +53,13 @@ function createInvertedIndex(termFreq, numberOfFiles) {
         processTF_IDF(termFreq);
 
     // create inverted index
-    let invertedIndex = new Map();
+    let invertedIndex = {};
     termFreq.forEach(({term, freq, filename}) => {
-        if (!invertedIndex.get(term))
-            invertedIndex.set(term, new Array())
+        if (!invertedIndex[term])
+            invertedIndex[term] = []
         let weight = tf(term, freq) * idf(term, numberOfFiles);
         if (weight){
-            invertedIndex.get(term).push({file: parseInt(filename), weight: weight});
+            invertedIndex[term].push({file: parseInt(filename), weight: weight});
             if (weight > maxWeight) maxWeight = weight;
         }
     });
