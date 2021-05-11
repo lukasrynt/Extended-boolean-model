@@ -40,7 +40,7 @@ function trim(data) {
  */
 function processDocuments(cltPath) {
     collectionPath = cltPath;
-    const path = 'data/term_by_doc.json';
+    const path = 'data/inverted_index.json';
     const orig = fs.readdirSync(collectionPath);
     if (fs.existsSync(path))
         return JSON.parse(fs.readFileSync(path, 'utf-8'));

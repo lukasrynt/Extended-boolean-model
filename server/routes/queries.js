@@ -4,6 +4,10 @@ const fs = require('fs');
 const cors = require("cors");
 const parseRequest = require('../queries/parser');
 const evalQuery = require('../queries/evaluator');
+const {
+    performance
+} = require('perf_hooks');
+
 
 router.use(cors());
 
@@ -33,6 +37,7 @@ router.get('/', (req, res) => {
 // handle queries
 router.post('/', (req, res) => {
     // Parse the query
+    let t0 = performance.now()
     let parsedRequest;
     try {
         parsedRequest = parseRequest(req.body.query);
@@ -54,7 +59,8 @@ router.post('/', (req, res) => {
     }
     queryRes = queryRes.slice(0, 50);
     let mappedToFiles = loadFiles(queryRes, req.collectionPath);
-    //console.log(mappedToFiles);
+    let t1 = performance.now()
+    console.log("Time to evaluate and parse was: " + (t1 - t0) + " milliseconds.")
     res.json(mappedToFiles);
 });
 
