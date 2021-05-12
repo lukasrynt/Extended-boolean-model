@@ -160,7 +160,7 @@ function fillParentheses(tokens){
                 rightBracket(tokens, i);
                 i++;
             }    
-        }else if (tokens[i] === "!" && tokens[i] !== "("){
+        }else if (tokens[i] === "!" && tokens[i + 1] !== "("){
             if (i === 0)
                 tokens.splice(0, 0, "(")
             else
@@ -168,7 +168,6 @@ function fillParentheses(tokens){
             tokens.splice(i + 3, 0, ")");
             i++;
         }
-        
     }
 }
 
