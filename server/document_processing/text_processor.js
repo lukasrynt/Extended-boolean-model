@@ -42,10 +42,14 @@ function processDocuments(cltPath) {
     collectionPath = cltPath;
     const path = 'data/inverted_index.json';
     const orig = fs.readdirSync(collectionPath);
-    if (fs.existsSync(path))
+    if (fs.existsSync(path)){
+        console.log("Inverted index is created.");
         return JSON.parse(fs.readFileSync(path, 'utf-8'));
-    else
+    }
+    else{
+        console.log("Creating inverted index. Be patient, it takes a while.");
         return preprocessFiles(orig);
+    }
 }
 
 module.exports = processDocuments;
