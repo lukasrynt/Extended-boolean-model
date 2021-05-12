@@ -16,10 +16,6 @@ function evaluate(processedQuery, invertedIndex, colPath){
     let res = parse(processedQuery);
     if (!res) return;
 
-    if (res.operator === "!")
-        res.content = res.content.filter(record => record.weight == 1);
-    console.log()    
-
     // sort files by weight
     res.content.sort((a, b) => {
         return b.weight - a.weight;
@@ -66,14 +62,15 @@ function pushSingleContent(resContent, content) {
 function parseOr(processedQuery) {
     let left = parse(processedQuery.lVal)
     let right = parse(processedQuery.rVal)
-
     if (!left || !right) return
     let resExpression = "(" + left.expression + " && " + right.expression + ")";
-
     let resContent = [];
     let l = 0, r = 0;
     // if left value is not operator, fill result first with right content
     if (processedQuery.lVal.operator === "!"){
+        right.content.sort((a, b) => {
+            return b.weight - a.weight;
+        });
         for (;r < right.content.length; r++)
         resContent.push({
             file: right.content[r].file,
@@ -82,6 +79,9 @@ function parseOr(processedQuery) {
     }
     // if right value is not operator, fill result first with left content
     if (processedQuery.rVal.operator === "!"){
+        left.content.sort((a, b) => {
+            return b.weight - a.weight;
+        });
         resContent.concat(left);
         for (;l < left.content.length; l++)
         resContent.push({
@@ -89,7 +89,6 @@ function parseOr(processedQuery) {
             weight: 1
         });
     }
-
     // merge style counting
     while (l < left.content.length && r < right.content.length) {
         if (left.content[l].file === right.content[r].file) {
@@ -124,12 +123,6 @@ function parseAnd(processedQuery) {
     let left = parse(processedQuery.lVal)
     let right = parse(processedQuery.rVal)
     if (!left || !right) return
-
-    if (processedQuery.lVal.operator === "!")
-        left.content = left.content.filter(record => record.weight == 1);
-
-    if (processedQuery.rVal.operator === "!")
-        right.content = right.content.filter(record => record.weight == 1);
 
     let resExpression = "(" + left.expression + " && " + right.expression + ")";
     if (!left.content || !right.content)
@@ -179,20 +172,22 @@ function parseTerm(expression) {
 }
 
 /**
- * Fill in rest files that are not included in res array
- * @param {{expression: string, content: Array<{file: string, weight: number}>}} res Array of files which we want to be filled
+ * Function which returns files that are not included in notRes
+ * @param {{expression: string, content: Array<{file: string, weight: number}>}} notRes Array of files which we dont want in result
  */
-function fillRestFiles (res){
+function getNotIncludedfiles(notRes){
+    let result = [];
     const files = fs.readdirSync(collectionPath);
     const length = files.length;
     for (let i = 1; i < length; i++){
-        if (!res.content.some(record => record.file == i )){
-            res.content.push({
+        if (!notRes.content.some(record => record.file == i )){
+            result.push({
                 file: i,
-                weight: 0
+                weight: 1
             });
         }
     }
+    return result;
 }
 
 /**
@@ -201,22 +196,13 @@ function fillRestFiles (res){
  * @return {{expression: string, content: Array<{file: string, weight: number}>} | undefined} Result of evaluation
  */
 function parseNot(notExpression) {
-    let result = parse(notExpression.value);
-    if (!result) return
+    let notResult = parse(notExpression.value);
 
-    fillRestFiles(result);
-
-    result.content.forEach((item) => {
-        item.weight = 1 - item.weight;
-    });
-
-    result.content.sort((a, b) => {
-        return a.file - b.file;
-    });
+    let result = getNotIncludedfiles(notResult);
 
     return {
-        expression: result.expression,
-        content: result.content
+        expression: notResult.expression,
+        content: result
     }
 }
 
