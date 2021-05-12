@@ -25,8 +25,8 @@ Ke spuštění serveru se nejdříve musíme přepnout do složky server, kde js
 ### Spuštění klienta
 Opět stejný postup, akorát se přepneme do složky client. Opět pustíme příkaz `npm start`, který spustí klienta. Následně by se nám měl spustit prohlížeč se zadanou url. Pokud se prohlížeč nespustí, spustíme ho ručně a zadáme do url `http://localhost:3000/`.
 
-## Alternativní spuštění klienta
-Pro klienta jsme vytvořili spustitelný soubor, který se nachází ve složce klient. Díky tomuto souboru můžeme obejít instalování balíčků ve složce server a nemusíme spouštět příkaz `npm start`, pouze stačí spustit spustitelné soubory. Spustitelné soubory jsou pro platformy Windows, Linux i macOS.
+## Alternativní spuštění serveru
+Pro server jsme vytvořili spustitelný soubor, který se nachází ve složce server. Díky tomuto souboru můžeme obejít instalování balíčků ve složce server a nemusíme spouštět příkaz `npm start`, pouze stačí spustit spustitelné soubory. Spustitelné soubory jsou pro platformy Windows, Linux i macOS.
 
 Linux - `./extended-boolean-model-linux`
 Windows - `extended-boolean-model-linux.exe`
