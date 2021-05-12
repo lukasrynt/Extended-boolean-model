@@ -4,7 +4,8 @@
   "description": "Project for BI-VWM",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js --ignore ./data/* ./data/inverted_index.json",
+    "start": "node app.js --ignore ./data/* ./data/inverted_index.json",
+    "dev": "nodemon app.js --ignore ./data/* ./data/inverted_index.json",
     "install": "npm install express --save nodemon"
   },
   "repository": {
