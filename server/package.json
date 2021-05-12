@@ -12,7 +12,8 @@
     "type": "git",
     "url": "git@gitlab.fit.cvut.cz:ryntluka/vwm---extended-boolean-model.git"
   },
-  "author": "",
+  "bin": "app.js", 
+  "author": "Martin Šír, Lukáš Rynt",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
