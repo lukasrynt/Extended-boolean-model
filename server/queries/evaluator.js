@@ -65,31 +65,8 @@ function parseOr(processedQuery) {
     if (!left || !right) return
     let resExpression = "(" + left.expression + " && " + right.expression + ")";
     let resContent = [];
-    let l = 0, r = 0;
-    // if left value is not operator, fill result first with right content
-    if (processedQuery.lVal.operator === "!"){
-        right.content.sort((a, b) => {
-            return b.weight - a.weight;
-        });
-        for (;r < right.content.length; r++)
-        resContent.push({
-            file: right.content[r].file,
-            weight: 1
-        });
-    }
-    // if right value is not operator, fill result first with left content
-    if (processedQuery.rVal.operator === "!"){
-        left.content.sort((a, b) => {
-            return b.weight - a.weight;
-        });
-        resContent.concat(left);
-        for (;l < left.content.length; l++)
-        resContent.push({
-            file: left.content[l].file,
-            weight: 1
-        });
-    }
     // merge style counting
+    let l = 0, r = 0;
     while (l < left.content.length && r < right.content.length) {
         if (left.content[l].file === right.content[r].file) {
             resContent.push({
