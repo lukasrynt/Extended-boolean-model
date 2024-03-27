@@ -5,10 +5,5 @@ client/node_modules
 .vscode
 server/data/inverted_index.json
 # experiment collections
-server/data/collection_10
-server/data/collection_50
-server/data/collection_100
-server/data/collection_200
-server/data/collection_500
-server/data/collection_1000
-server/data/collection_2000
+server/data/*
+server/extended-boolean-model-*
